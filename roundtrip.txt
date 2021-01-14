@@ -1,0 +1,59 @@
+while a==2:
+    b=input('Travelling From:')
+    c=input('Travelling To:')
+    d=input('Date of Departure(yyyy-mm-dd):')
+    e=int(input('Number of Adults(12+):'))
+    f=int(input('Number of Children(2-12):'))
+    g=int(input('Number of Infants(Under 2):'))
+    h=input('Class(Economy,Premium Economy,Business):')
+    w="select a.plane_id,a.Company,a.place_of_departure,a.Destination,ai.cost from aeroplane a,aeroplane_cost ai where a.plane_id=ai.plane_id and a.place_of_departure='%s' and a.destination='%s' and ai.class='%s'"%(b,c,h)
+    cursor.execute(w)
+    Y=cursor.fetchall()
+
+    if Y!=[]:
+        for v in Y:
+            print(v)
+    else:
+        print("There are no flights to the given destination from your location")
+        print()
+        print("Select again")
+        continue
+    Z=input("Enter plane_ID:")
+    file1=open(r'C:\Users\vikia\OneDrive\Desktop\Python Project\Aeroplane_Ctr.txt','r')
+    read1=file1.read()
+    read1=int(read1)
+    for i in range(0,e):
+        name1=input("Enter Name:")
+        age1=input("Enter Age:")
+        gender1=input('Enter Gender(M/F/O):')
+        passno1=int(input('Enter Passport Number:'))
+        meal1=input("Enter meal preferences:(Veg/Non-Veg):")
+        travelid1=p[read1]
+        read1+=1
+        list1=[name1,passno1,age1,gender1,meal1]
+        LA.append(list1)
+    for j in range(0,f):
+        name2=input("Enter Name:")
+        age2=input("Enter Age:")
+        gender2=input('Enter Gender(M/F/O):')
+        passno2=int(input('Enter Passport Number:'))
+        meal2=input("Enter meal preferences:(Veg/Non-Veg):")
+        list2=[name2,passno2,age2,gender2,meal2]
+        travelid2=p[read1]
+        read1+=1
+        LC.append(list2)
+    for k in range(0,g):
+        name3=input("Enter Name:")
+        age3=input("Enter Age:")
+        gender3=input('Enter Gender(M/F/O):')
+        passno3=int(input('Enter Passport Number:'))
+        meal3=input("Enter meal preferences:(Veg/Non-Veg):")
+        list3=[name3,passno3,age3,gender3,meal3]
+        travelid3=p[read1]
+        read1+=1
+        LA.append(list3)
+    mobile=int(input("Enter Mobile Number:"))
+    email_ID=input("Enter Email_ID:")
+    cursor.execute("select Type from Aeroplane where Plane_Id={}").format(Z)
+    Type=cursor.fetchone()
+mycon.close()

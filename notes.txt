@@ -1,0 +1,10 @@
+load data local infile 'c:/temp/aeroplane.csv' into table aeroplane
+fields terminated by ',' enclosed by '"' lines terminated by '\r\n'
+(Plane_ID, Company, Type, Place_of_Departure, Destination);
+
+mysql --local-infile -u root -p
+
+SHOW GLOBAL VARIABLES LIKE 'local_infile';
+SET GLOBAL local_infile = true;
+
+Loading local data is disabled; this must be enabled on both the client and server sides
