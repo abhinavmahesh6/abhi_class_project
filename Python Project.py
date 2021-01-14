@@ -2,7 +2,7 @@ import mysql.connector as sqltor
 import random
 import csv
 #import Aeroplane_Seats
-filename = r'c:\\workspace\\abhi_school_project\\Aeroplane_Ctr.txt'
+filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 
 p=[]
 for i in range(65,93):
@@ -16,7 +16,7 @@ for i in range(65,93):
                         s=str(chr(i))+str(j)+str(k)+str(l)+str(m)
                         p.append(s)
     
-mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project")
+mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin='mysql_native_password')
 cursor=mycon.cursor()
 a=int(input('Enter 1 for one way and 2 for a roundtrip:'))
 LA=[]
