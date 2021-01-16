@@ -7,6 +7,7 @@ filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 def main():
     TravelID()
     Getinputs()
+    
 def TravelID():
     global TravelList#p
     TravelList=[]
@@ -20,6 +21,7 @@ def TravelID():
                         else:
                             s=str(chr(i))+str(j)+str(k)+str(l)+str(m)
                             TravelList.append(s)
+
 def Getinputs():        
     mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
     cursor=mycon.cursor()
@@ -48,7 +50,11 @@ def Getinputs():
                 for traverse3 in traverse1:
                     print(traverse3,end=' ')
                 print()    
-                    
+
+        
+            
+
+                
         if _Fetch1==[]:
             query2="select a.plane_id,a.Company,a.place_of_departure,a.Destination,ac.cost,time(a.Time_of_Dep) from aeroplane a,aeroplane_cost ac where a.plane_id=ac.plane_id and a.place_of_departure='%s' and a.destination='%s' and ac.class='%s'"%(_To,_From,_Class)
             cursor.execute(query2)
@@ -130,9 +136,17 @@ def Getinputs():
             mycon.commit()
             list3=[name3,passno3,gender3,age3,travelid3,meal3]
             LI.append(list3)
-            
+
+    
+    
         mobile=int(input("Enter Mobile Number:"))
         email_ID=input("Enter Email_ID:")
+        
+        query6="insert into Booking values('%s','%s')"%(cardDetails(),bookingID())
+        cursor.execute(query6)
+        mycon.commit()
+        
+        
         print("\n",mobile,email_ID)
         fileread.close()
         filewrite=open(filename,'w')
@@ -142,10 +156,20 @@ def Getinputs():
         break
     mycon.close()
 
-    
-    
-    
-    
+def bookingID():
+    _idvar=''
+    for i in range(0,10):
+        tempvar1=random.randint(0,10)
+        _idvar+=str(tempvar1)
+    return _idvar
+
+def cardDetails():
+    _cardno=int(input("Enter Card Number(XXXX-XXXX-XXXX-XXXX): "))
+    _expdate=input("Enter expiry date(mm/yy): ")
+    _name=input("Enter Name on Card: ")
+    _cvv=int(input("Enter CVV: "))
+    return _name
+
 if __name__ == "__main__":
     main()
     
@@ -154,6 +178,3 @@ if __name__ == "__main__":
 #need to add window/aisle
 #need to put payment details
 #need to create bill file
-
-
-
