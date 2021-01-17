@@ -19,7 +19,7 @@ TERMINATED BY ';'
 ESCAPED BY '"' 
 LINES TERMINATED BY '\r\n';
 
-load data local infile 'c:/temp/aeroplane_cost.csv' into table aeroplane_cost
+load data local infile 'C:/workspace/abhi_class_project/mysql/aeroplane_cost.csv' into table aeroplane_cost
 fields terminated by ',' enclosed by '"'
 lines terminated by '\r\n'
 (Plane_ID, Class, Cost);

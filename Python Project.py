@@ -6,9 +6,9 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
-mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-cursor=mycon.cursor()
 
+global listbookid
+listbookid=[]
 
 def main():
     TravelID()
@@ -31,6 +31,8 @@ def TravelID():
                             TravelList.append(s)
 
 def Getinputs():           
+    mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+    cursor=mycon.cursor()
     global oneround
     oneround=int(input("Enter 1 for one-way and 2 for round trip: "))
     LA=[]
@@ -55,14 +57,26 @@ def Getinputs():
         #print("\n",_From,_To,_Departure,_NoAdults,_NoChildren,_NoInfants,_Class)
         query1="select a.plane_id,a.Company,a.place_of_departure,a.Destination,ac.cost,time(a.Time_of_Dep) from aeroplane a,aeroplane_cost ac where a.plane_id=ac.plane_id and a.place_of_departure='%s' and a.destination='%s' and ac.class='%s'"%(_From,_To,_Class)
         cursor.execute(query1)
-        global _Fetch1
         _Fetch1=cursor.fetchall()#Y
-        
+        def displayplanes():
+            print()
+            print()
+            print("These are the flights available between cities:")
+            print()
+            print("Plane_ID|Airline\t\t|City 1\t\t|City 2\t|Cost\t|Time of Departure|")
+            print()
+            for traverse1 in _Fetch1:
+                for traverse3 in traverse1:
+                    print(traverse3,end='\t|')
+                print()
+                print()
         
             
 
                 
         if _Fetch1==[]:
+            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+            cursor=mycon.cursor()
             query2="select a.plane_id,a.Company,a.place_of_departure,a.Destination,ac.cost,time(a.Time_of_Dep) from aeroplane a,aeroplane_cost ac where a.plane_id=ac.plane_id and a.place_of_departure='%s' and a.destination='%s' and ac.class='%s'"%(_To,_From,_Class)
             cursor.execute(query2)
             _Fetch1=cursor.fetchall()
@@ -103,6 +117,8 @@ def Getinputs():
         
         
         for inp1 in range(0,_NoAdults):
+            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+            cursor=mycon.cursor()
             name1=input("Enter Name: ")
             age1=input("Enter Age: ")
             gender1=input('Enter Gender(M/F/O): ')
@@ -117,6 +133,8 @@ def Getinputs():
             mycon.commit()
             LA.append(list1)
         for inp2 in range(0,_NoChildren):
+            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+            cursor=mycon.cursor()
             name2=input("Enter Name: ")
             age2=input("Enter Age: ")
             gender2=input('Enter Gender(M/F/O): ')
@@ -131,6 +149,8 @@ def Getinputs():
             mycon.commit()
             LC.append(list2)
         for inp3 in range(0,_NoInfants):
+            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+            cursor=mycon.cursor()
             name3=input("Enter Name: ")
             age3=input("Enter Age(in months): ")
             gender3=input('Enter Gender(M/F/O): ')
@@ -146,7 +166,8 @@ def Getinputs():
             LI.append(list3)
 
     
-    
+        mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+        cursor=mycon.cursor()
         mobile=int(input("Enter Mobile Number: "))
         email_ID=input("Enter Email_ID: ")
         cost()
@@ -183,13 +204,23 @@ def cost():
         print("Total cost = ",round(roundtripcost))
         print()
 def bookingID():
-    _idvar=''
-    for i in range(0,10):
-        tempvar1=random.randint(0,9)
-        _idvar+=str(tempvar1)
-    global BookingID
-    BookingID = _idvar
+    while True:
+        _idvar=''
+        for i in range(0,10):
+            tempvar1=random.randint(0,9)
+            _idvar+=str(tempvar1)        
+        if _idvar not in listbookid:
+            listbookid.append(_idvar)
+        else:
+            continue
+        global BookingID
+        BookingID = _idvar
+        break
     return _idvar
+
+
+
+
 
 def cardDetails():
     _cardno=input("Enter Card Number(XXXX-XXXX-XXXX-XXXX): ")
@@ -219,7 +250,7 @@ def printticket():
 
         
         
-    _fh.write("Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
+    _fh.write("PlaneID: " + str(d['PlaneID'])+"\t\t"+"Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
     _fh.write("Passenger(s)"+"\n\n")
     
     _fh.close()
@@ -248,18 +279,7 @@ def timeofarrival():
         totsec3=totsec2-86400
         arrival=time.strftime("%H:%M:%S", time.gmtime(totsec3))    
     return arrival
-def displayplanes():
-    print()
-    print()
-    print("These are the flights available between cities:")
-    print()
-    print("Plane_ID|Airline\t\t|City 1\t\t|City 2\t|Cost\t|Time of Departure|")
-    print()
-    for traverse1 in _Fetch1:
-        for traverse3 in traverse1:
-            print(traverse3,end='\t|')
-        print()
-        print()
+
 if __name__ == "__main__":
     main()
     
