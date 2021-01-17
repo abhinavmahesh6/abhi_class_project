@@ -6,7 +6,8 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
-
+global mycon
+mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
 global listbookid
 listbookid=[]
 
@@ -30,9 +31,7 @@ def TravelID():
                             s=str(chr(i))+str(j)+str(k)+str(l)+str(m)
                             TravelList.append(s)
 
-def Getinputs():           
-    mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-    cursor=mycon.cursor()
+def Getinputs():             
     global oneround
     oneround=int(input("Enter 1 for one-way and 2 for round trip: "))
     LA=[]
@@ -56,6 +55,7 @@ def Getinputs():
         _Class=input('Class(Economy,Premium Economy,Business): ')#h
         #print("\n",_From,_To,_Departure,_NoAdults,_NoChildren,_NoInfants,_Class)
         query1="select a.plane_id,a.Company,a.place_of_departure,a.Destination,ac.cost,time(a.Time_of_Dep) from aeroplane a,aeroplane_cost ac where a.plane_id=ac.plane_id and a.place_of_departure='%s' and a.destination='%s' and ac.class='%s'"%(_From,_To,_Class)
+        cursor=mycon.cursor()
         cursor.execute(query1)
         _Fetch1=cursor.fetchall()#Y
         def displayplanes():
@@ -74,9 +74,7 @@ def Getinputs():
             
 
                 
-        if _Fetch1==[]:
-            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-            cursor=mycon.cursor()
+        if _Fetch1==[]:            
             query2="select a.plane_id,a.Company,a.place_of_departure,a.Destination,ac.cost,time(a.Time_of_Dep) from aeroplane a,aeroplane_cost ac where a.plane_id=ac.plane_id and a.place_of_departure='%s' and a.destination='%s' and ac.class='%s'"%(_To,_From,_Class)
             cursor.execute(query2)
             _Fetch1=cursor.fetchall()
@@ -117,8 +115,6 @@ def Getinputs():
         
         
         for inp1 in range(0,_NoAdults):
-            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-            cursor=mycon.cursor()
             name1=input("Enter Name: ")
             age1=input("Enter Age: ")
             gender1=input('Enter Gender(M/F/O): ')
@@ -132,9 +128,7 @@ def Getinputs():
             cursor.execute(query3)
             mycon.commit()
             LA.append(list1)
-        for inp2 in range(0,_NoChildren):
-            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-            cursor=mycon.cursor()
+        for inp2 in range(0,_NoChildren):            
             name2=input("Enter Name: ")
             age2=input("Enter Age: ")
             gender2=input('Enter Gender(M/F/O): ')
@@ -149,8 +143,6 @@ def Getinputs():
             mycon.commit()
             LC.append(list2)
         for inp3 in range(0,_NoInfants):
-            mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-            cursor=mycon.cursor()
             name3=input("Enter Name: ")
             age3=input("Enter Age(in months): ")
             gender3=input('Enter Gender(M/F/O): ')
@@ -166,8 +158,6 @@ def Getinputs():
             LI.append(list3)
 
     
-        mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-        cursor=mycon.cursor()
         mobile=int(input("Enter Mobile Number: "))
         email_ID=input("Enter Email_ID: ")
         cost()
@@ -185,9 +175,8 @@ def Getinputs():
         break
     mycon.close()
 def cost():
-    mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-    cursor=mycon.cursor()
     query8="select Cost from aeroplane_cost where Class='%s' and Plane_ID='%s'"%(_Class,InpPlane_ID)
+    cursor=mycon.cursor()
     cursor.execute(query8)
     _Fetch3=cursor.fetchall()
     for traverse6 in _Fetch3:
@@ -229,11 +218,12 @@ def cardDetails():
     _cvv=input("Enter CVV: ")
     return _name
 def printticket():
-    mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
-    cursor=mycon.cursor()
     outfile = r'C:\workspace\abhi_class_project\printticket_' + InpPlane_ID + '.txt'
     _fh=open(outfile,'w')
+    mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+    cursor=mycon.cursor()
     query7="select * from aeroplane natural join booking natural join cust_info group by Travel_ID"
+    
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
     global d
