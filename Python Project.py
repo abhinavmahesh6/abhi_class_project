@@ -1,7 +1,10 @@
 import mysql.connector as sqltor
 import random
 import csv
+import time
 from datetime import datetime
+from datetime import date
+from datetime import timedelta
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
 cursor=mycon.cursor()
@@ -109,7 +112,7 @@ def Getinputs():
             travelid1=TravelList[travelidvar]
             travelidvar+=1
             list1=[name1,passno1,gender1,age1,travelid1,meal1]
-            query3="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name1,passno1,gender1,age1,travelid1,meal1,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID)
+            query3="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name1,passno1,gender1,age1,travelid1,meal1,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class)
             cursor.execute(query3)
             mycon.commit()
             LA.append(list1)
@@ -123,7 +126,7 @@ def Getinputs():
             travelid2=TravelList[travelidvar]
             travelidvar+=1
             list2=[name2,passno2,gender2,age2,travelid2,meal2]
-            query4="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name2,passno2,gender2,age2,travelid2,meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID)
+            query4="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name2,passno2,gender2,age2,travelid2,meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class)
             cursor.execute(query4)
             mycon.commit()
             LC.append(list2)
@@ -136,7 +139,7 @@ def Getinputs():
             #print("\n",name3,age3,gender3,passno3,meal3)
             travelid3=TravelList[travelidvar]
             travelidvar+=1
-            query5="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name3,passno3,gender3,age3+' months',travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID)
+            query5="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name3,passno3,gender3,age3+' months',travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class)
             cursor.execute(query5)
             mycon.commit()
             list3=[name3,passno3,gender3,age3,travelid3,meal3]
@@ -147,12 +150,12 @@ def Getinputs():
         mobile=int(input("Enter Mobile Number: "))
         email_ID=input("Enter Email_ID: ")
         cost()
-        query6="insert into Booking values('%s','%s')"%(cardDetails(),BookingID)
+        query6="insert into Booking values('%s','%s','%s')"%(cardDetails(),BookingID,date.today())
         cursor.execute(query6)
         mycon.commit()
         
         
-        print("\n",mobile,email_ID)
+        #print("\n",mobile,email_ID)
         fileread.close()
         filewrite=open(filename,'w')
         travelidvar=str(travelidvar)
@@ -172,10 +175,13 @@ def cost():
     onewaycost=(_NoAdults*cost)+(_NoChildren*(cost/2))            
     roundtripcost=onewaycost*2   
     if oneround==1:
+        print()        
         print("Total cost = ",round(onewaycost))
+        print()
     elif oneround==2:
+        print()
         print("Total cost = ",round(roundtripcost))
-
+        print()
 def bookingID():
     _idvar=''
     for i in range(0,10):
@@ -196,18 +202,52 @@ def printticket():
     cursor=mycon.cursor()
     outfile = r'C:\workspace\abhi_class_project\printticket_' + InpPlane_ID + '.txt'
     _fh=open(outfile,'w')
-    query7="select c.name,c.age,c.gender,c.Travel_ID,c.meal_pref,c.Passport_No,c.Plane_ID,c.Date_of_Dep,c.Time_of_Dep,a.company,a.Place_of_Departure,a.Destination,a.Duration,b.bookingid from cust_info c,aeroplane a,booking b where b.bookingid=c.bookingid and a.Plane_ID=c.Plane_ID"
+    query7="select * from aeroplane natural join booking natural join cust_info group by Travel_ID"
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
+    global d
     d={}
+    print(_Fetch2)
     for row in _Fetch2:
-        d={'Name':row[0],'Age':row[1],'Gender':row[2],'TravelID':row[3],'Mealpref':row[4],'Passport Number':row[5],'PlaneID':row[6],'Date of Departure':row[7].strftime("20%y-%m-%d"),'Time of Departure':str(row[8]),'Airline':row[9],'From':_From,'To':_To,'Duration of Flight':str(row[12]),'BookingID':row[13]}
-        print(d)       
-        _fh.write(d['Name'])
-        _fh.write('\n')
+        d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),'Time of Departure':row[1],'Airline':row[3],'From':_From,'To':_To,'Duration of Flight':str(row[7]),'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8]}
+        stringtest1="BookingID,Date of Booking,From,To,PlaneID,Airline,Class,Date of Departure,Time of Departure,Duration of Flight,Time of arrival,Date of arrival,Name,Age,Gender,Passport Number,TravelID,Meal preference,email,mobile,Name"
+    _fh.write("BookingID: " + str(d['BookingID'])+ "\t\t"+"Date of Booking: " + str(d['DateofBooking'])+"\n\n")
+    _fh.write("Date of Departure: " + str(d['Date of Departure'])+"\t\t"+"From: " + str(d['From'])+"\t\t"+"To: " + str(d['To'])+"\t\t"+ "Duration of Flight: " + str(d['Duration of Flight'])+"\n\n")   
+    
+    #print(time.gmtime(d['Duration of Flight']))
+    #time.strftime("%H:%M:%S", time.gmtime(n))
+
+        
+        
+    _fh.write("Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
     
     
     _fh.close()
+    
+def timeofarrival():    
+    ctr1=2
+    ctr2=2
+    split1=str(d['Duration of Flight']).split(':')
+    split2=str(d['Time of Departure']).split(':')
+    totsec1=0
+    for time1 in split1:
+        totsec1+=round(int(time1)*((60)**ctr1))
+        ctr1-=1
+    for time2 in split2:
+        totsec1+=round(int(time2)*((60)**ctr2))
+        ctr2-=1
+        
+    arrival=time.strftime("%H:%M:%S", time.gmtime(totsec1))
+    split3=str(arrival).split(':')
+    totsec2=0
+    ctr3=2
+    for time3 in split3:        
+        totsec2+=round(int(time3)*((60)**ctr3))
+        ctr3-=1
+    if totsec2>86400:    
+        totsec3=totsec2-86400
+        arrival=time.strftime("%H:%M:%S", time.gmtime(totsec3))    
+    return arrival
 def displayplanes():
     print()
     print()
