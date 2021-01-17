@@ -23,3 +23,14 @@ load data local infile 'C:/workspace/abhi_class_project/mysql/aeroplane_cost.csv
 fields terminated by ',' enclosed by '"'
 lines terminated by '\r\n'
 (Plane_ID, Class, Cost);
+
+How to export only table structure from mysql (no data)
+mysqldump -d -u root -p<pwd> -h localhost project > c:\temp\table_structure.txt
+
+How to export table structure and data from mysql (remove the -d option)
+mysqldump -u root -p<pwd> -h localhost project > c:\temp\table_structure.txt
+
+How to exceute this against a new database
+1. Login into mysql 
+2. mysql -u root -p
+3. source c:\temp\table_structure_and_data.txt - Note it will drop existing tables and recreate them
