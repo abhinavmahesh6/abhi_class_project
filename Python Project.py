@@ -70,7 +70,7 @@ def Getinputs():
             if _Fetch1==[]:
                 print("There are no flights to the given destination from your location")
                 print()
-                print("Enter again")
+                print("Please enter another destination")
                 print()
                 continue
             else:
@@ -220,7 +220,7 @@ def printticket():
         
         
     _fh.write("Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
-    
+    _fh.write("Passenger(s)"+"\n\n")
     
     _fh.close()
     

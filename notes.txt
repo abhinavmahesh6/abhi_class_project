@@ -1,6 +1,7 @@
-load data local infile 'c:/temp/aeroplane.csv' into table aeroplane
+use project;
+load data local infile 'c:/temp/aeroplane2.csv' into table aeroplane
 fields terminated by ',' enclosed by '"' lines terminated by '\r\n'
-(Plane_ID, Company, Type, Place_of_Departure, Destination);
+(Plane_ID, Company, Type, Place_of_Departure, Destination, Time_of_Dep, Duration);
 
 mysql --local-infile -u root -p
 
@@ -8,3 +9,17 @@ SHOW GLOBAL VARIABLES LIKE 'local_infile';
 SET GLOBAL local_infile = true;
 
 Loading local data is disabled; this must be enabled on both the client and server sides
+
+Exporting data from mysql
+
+SELECT * FROM aeroplane 
+INTO OUTFILE 'C:/temp/aeroplane2.csv' 
+FIELDS ENCLOSED BY '"' 
+TERMINATED BY ';' 
+ESCAPED BY '"' 
+LINES TERMINATED BY '\r\n';
+
+load data local infile 'c:/temp/aeroplane_cost.csv' into table aeroplane_cost
+fields terminated by ',' enclosed by '"'
+lines terminated by '\r\n'
+(Plane_ID, Class, Cost);

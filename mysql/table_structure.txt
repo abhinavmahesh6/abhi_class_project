@@ -17,16 +17,19 @@ cust_info
 | Field       | Type        | Null | Key | Default | Extra |
 +-------------+-------------+------+-----+---------+-------+
 | Name        | varchar(30) | YES  |     | NULL    |       |
-| Passport_No | int         | YES  |     | NULL    |       |
+| Passport_No | bigint      | YES  |     | NULL    |       |
 | Gender      | char(1)     | YES  |     | NULL    |       |
-| Age         | int         | YES  |     | NULL    |       |
+| Age         | varchar(10) | YES  |     | NULL    |       |
 | Travel_ID   | varchar(10) | NO   | PRI | NULL    |       |
 | meal_pref   | varchar(10) | YES  |     | NULL    |       |
 | Plane_ID    | char(6)     | YES  |     | NULL    |       |
 | Date_of_Dep | date        | YES  |     | NULL    |       |
 | Time_of_Dep | time        | YES  |     | NULL    |       |
+| BookingID   | bigint      | YES  |     | NULL    |       |
+| Class       | varchar(15) | YES  |     | NULL    |       |
 +-------------+-------------+------+-----+---------+-------+
 
+aeroplane_cost
 +----------+-------------+------+-----+---------+-------+
 | Field    | Type        | Null | Key | Default | Extra |
 +----------+-------------+------+-----+---------+-------+
@@ -34,3 +37,12 @@ cust_info
 | Class    | varchar(15) | YES  |     | NULL    |       |
 | Cost     | int         | YES  |     | NULL    |       |
 +----------+-------------+------+-----+---------+-------+
+
+booking
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| Bookedby        | varchar(30) | NO   |     | NULL    |       |
+| BookingID       | bigint      | YES  |     | NULL    |       |
+| Date_of_Booking | date        | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+

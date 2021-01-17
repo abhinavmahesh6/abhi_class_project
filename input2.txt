@@ -1,16 +1,20 @@
 1
-Dubai
-Chennai
-2021-01-01
+Kolkata
+Hyderabad
+2021-01-28
 1
 0
 0
-Economy
-ER3404
-Abhinav Mahesh
+Premium Economy
+AI6564
+Mahesh
 17
 M
-100000
+123456789012
 Veg
 9003190031
 abhi@gmail.com
+4743-2314-2345-2314
+09/21
+Mahesh
+122

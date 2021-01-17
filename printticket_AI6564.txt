@@ -1,0 +1,8 @@
+BookingID: 667440736		Date of Booking: 2021-01-17
+
+Date of Departure: 2021-01-28		From: Kolkata		To: Hyderabad		Duration of Flight: 2:30:00
+
+Time of Departure: 6:00:00		Class: Premium Economy		Time of Arrival: 08:30:00
+
+Passenger(s)
+
