@@ -222,15 +222,21 @@ def printticket():
     global d
     d={}
     print(_Fetch2)
+    rowcnt = 0
     for row in _Fetch2:
+        rowcnt = rowcnt + 1
         d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),'Time of Departure':row[1],'Airline':row[3],'From':_From,'To':_To,'Duration of Flight':str(row[7]),'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8]}
         stringtest1="BookingID,Date of Booking,From,To,PlaneID,Airline,Class,Date of Departure,Time of Departure,Duration of Flight,Time of arrival,Date of arrival,Name,Age,Gender,Passport Number,TravelID,Meal preference,email,mobile,Name"
-    _fh.write("BookingID: " + str(d['BookingID'])+ "\t\t"+"Date of Booking: " + str(d['DateofBooking'])+"\n\n")
-    _fh.write("Date of Departure: " + str(d['Date of Departure'])+"\t\t"+"From: " + str(d['From'])+"\t\t"+"To: " + str(d['To'])+"\t\t"+ "Duration of Flight: " + str(d['Duration of Flight'])+"\n\n")   
-    
-    _fh.write("PlaneID: " + str(d['PlaneID'])+"\t\t"+"Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
-    _fh.write("Passenger(s)"+"\n\n")
-    
+        
+        if (rowcnt == 1):
+            _fh.write("BookingID: " + str(d['BookingID'])+ "\t\t"+"Date of Booking: " + str(d['DateofBooking'])+"\n\n")
+            _fh.write("Date of Departure: " + str(d['Date of Departure'])+"\t\t"+"From: " + str(d['From'])+"\t\t"+"To: " + str(d['To'])+"\t\t"+ "Duration of Flight: " + str(d['Duration of Flight'])+"\n\n")   
+            
+            _fh.write("PlaneID: " + str(d['PlaneID'])+"\t\t"+"Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
+            _fh.write("Passenger(s)"+"\n\n")
+
+        _fh.write(row[10]+"\n") 
+
     _fh.close()
     
 def timeofarrival():    

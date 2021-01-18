@@ -1,0 +1,16 @@
+BookingID: 784085331		Date of Booking: 2021-01-18
+
+Date of Departure: 2021-01-28		From: Mumbai		To: Chennai		Duration of Flight: 4:00:00
+
+PlaneID: AX2032		Time of Departure: 19:30:00		Class: Economy		Time of Arrival: 23:30:00
+
+Passenger(s)
+
+BookingID: 784085331		Date of Booking: 2021-01-18
+
+Date of Departure: 2021-01-28		From: Mumbai		To: Chennai		Duration of Flight: 4:00:00
+
+PlaneID: AX2032		Time of Departure: 19:30:00		Class: Economy		Time of Arrival: 23:30:00
+
+Passenger(s)
+
