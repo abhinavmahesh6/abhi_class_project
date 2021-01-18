@@ -236,7 +236,8 @@ def printticket():
             _fh.write("Passenger(s)"+"\n\n")
 
         _fh.write(row[10]+"\n") 
-
+    # Add other common text 
+        
     _fh.close()
     
 def timeofarrival():    
