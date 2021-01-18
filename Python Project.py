@@ -7,7 +7,7 @@ from datetime import date
 from datetime import timedelta
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 global mycon
-mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project",auth_plugin="mysql_native_password")
 global listbookid
 listbookid=[]
 
@@ -16,7 +16,8 @@ def main():
     bookingID()
     Getinputs()
     printticket()
-    
+    mycon.close()
+
 def TravelID():
     global TravelList#p
     TravelList=[]
@@ -63,16 +64,27 @@ def Getinputs():
             print()
             print("These are the flights available between cities:")
             print()
-            print("Plane_ID|Airline\t\t|City 1\t\t|City 2\t|Cost\t|Time of Departure|")
+            sep = "|"
+            #print("Plane_ID|Airline\t\t|City 1\t\t|City 2\t|Cost\t|Time of Departure|")
+            _plane_id_h = "Plane Id"
+            _airline_h = "Airline"
+            _city1_h = "City 1"
+            _city2_h = "City 2"
+            _cost_h = "Cost"
+            _time_of_dep_h = "Time of Dep"
+            print(_plane_id_h.ljust(10)+sep+_airline_h.ljust(30)+sep+_city1_h.ljust(20)+sep+_city2_h.ljust(20)+sep+str(_cost_h).ljust(10)+sep+str(_time_of_dep_h).ljust(10)+sep)
             print()
             for traverse1 in _Fetch1:
-                for traverse3 in traverse1:
-                    print(traverse3,end='\t|')
-                print()
-                print()
-        
-            
+                _plane_id = traverse1[0]
+                _airline = traverse1[1]
+                _city1 = traverse1[2]
+                _city2 = traverse1[3]
+                _cost = traverse1[4]
+                _time_of_dep = traverse1[5]
+                print(_plane_id.ljust(10)+sep+_airline.ljust(30)+sep+_city1.ljust(20)+sep+_city2.ljust(20)+sep+str(_cost).ljust(10)+sep+str(_time_of_dep).ljust(10)+sep)
 
+                print()
+                print()
                 
         if _Fetch1==[]:            
             query2="select a.plane_id,a.Company,a.place_of_departure,a.Destination,ac.cost,time(a.Time_of_Dep) from aeroplane a,aeroplane_cost ac where a.plane_id=ac.plane_id and a.place_of_departure='%s' and a.destination='%s' and ac.class='%s'"%(_To,_From,_Class)
@@ -97,22 +109,9 @@ def Getinputs():
         for traverse2 in _Fetch1:
             if InpPlane_ID in traverse2:
                 time_of_dep = str(traverse2[-1]) 
-                #_duration = str(traverse[-1])
-                #print(time_of_dep)
-                
-                
-         
-                        
-            
-            
-                
-                
-            
         fileread=open(filename,'r')
         travelidvar=fileread.read()#read1
         travelidvar=int(travelidvar)
-        
-        
         
         for inp1 in range(0,_NoAdults):
             name1=input("Enter Name: ")
@@ -157,7 +156,6 @@ def Getinputs():
             list3=[name3,passno3,gender3,age3,travelid3,meal3]
             LI.append(list3)
 
-    
         mobile=int(input("Enter Mobile Number: "))
         email_ID=input("Enter Email_ID: ")
         cost()
@@ -165,15 +163,13 @@ def Getinputs():
         cursor.execute(query6)
         mycon.commit()
         
-        
-        #print("\n",mobile,email_ID)
         fileread.close()
         filewrite=open(filename,'w')
         travelidvar=str(travelidvar)
         filewrite.write(travelidvar)
         filewrite.close()
         break
-    mycon.close()
+
 def cost():
     query8="select Cost from aeroplane_cost where Class='%s' and Plane_ID='%s'"%(_Class,InpPlane_ID)
     cursor=mycon.cursor()
@@ -192,6 +188,7 @@ def cost():
         print()
         print("Total cost = ",round(roundtripcost))
         print()
+
 def bookingID():
     while True:
         _idvar=''
@@ -207,22 +204,18 @@ def bookingID():
         break
     return _idvar
 
-
-
-
-
 def cardDetails():
     _cardno=input("Enter Card Number(XXXX-XXXX-XXXX-XXXX): ")
     _expdate=input("Enter expiry date(mm/yy): ")
     _name=input("Enter Name on Card: ")
     _cvv=input("Enter CVV: ")
     return _name
+
 def printticket():
-    outfile = r'C:\workspace\abhi_class_project\printticket_' + InpPlane_ID + '.txt'
+    outfile = r'C:\workspace\abhi_class_project\printticket_' + BookingID + '.txt'
     _fh=open(outfile,'w')
-    mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
     cursor=mycon.cursor()
-    query7="select * from aeroplane natural join booking natural join cust_info group by Travel_ID"
+    query7="select * from aeroplane natural join booking natural join cust_info where booking.bookingid = " + BookingID + " group by Travel_ID"
     
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
@@ -235,11 +228,6 @@ def printticket():
     _fh.write("BookingID: " + str(d['BookingID'])+ "\t\t"+"Date of Booking: " + str(d['DateofBooking'])+"\n\n")
     _fh.write("Date of Departure: " + str(d['Date of Departure'])+"\t\t"+"From: " + str(d['From'])+"\t\t"+"To: " + str(d['To'])+"\t\t"+ "Duration of Flight: " + str(d['Duration of Flight'])+"\n\n")   
     
-    #print(time.gmtime(d['Duration of Flight']))
-    #time.strftime("%H:%M:%S", time.gmtime(n))
-
-        
-        
     _fh.write("PlaneID: " + str(d['PlaneID'])+"\t\t"+"Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
     _fh.write("Passenger(s)"+"\n\n")
     
@@ -273,8 +261,3 @@ def timeofarrival():
 if __name__ == "__main__":
     main()
     
-#need to add time of departure and duration to aeroplane table
-#need to input cost
-#need to add window/aisle
-#need to put payment details
-#need to create bill file
