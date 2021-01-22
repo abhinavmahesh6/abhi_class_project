@@ -7,7 +7,7 @@ from datetime import date
 from datetime import timedelta
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 global mycon
-mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project",auth_plugin="mysql_native_password")
+mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
 global listbookid
 listbookid=[]
 
@@ -46,6 +46,8 @@ def Getinputs():
     global _NoInfants
     global _From
     global _To
+    global email_ID
+    global mobile
     while tempvar==1:
         _From=input('Travelling From: ')#b
         _To=input('Travelling To: ')#c
@@ -123,7 +125,7 @@ def Getinputs():
             travelid1=TravelList[travelidvar]
             travelidvar+=1
             list1=[name1,passno1,gender1,age1,travelid1,meal1]
-            query3="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name1,passno1,gender1,age1,travelid1,meal1,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class)
+            query3="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name1,passno1,gender1,age1,travelid1,meal1,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Adult')
             cursor.execute(query3)
             mycon.commit()
             LA.append(list1)
@@ -137,7 +139,7 @@ def Getinputs():
             travelid2=TravelList[travelidvar]
             travelidvar+=1
             list2=[name2,passno2,gender2,age2,travelid2,meal2]
-            query4="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name2,passno2,gender2,age2,travelid2,meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class)
+            query4="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name2,passno2,gender2,age2,travelid2,meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Child')
             cursor.execute(query4)
             mycon.commit()
             LC.append(list2)
@@ -150,7 +152,7 @@ def Getinputs():
             #print("\n",name3,age3,gender3,passno3,meal3)
             travelid3=TravelList[travelidvar]
             travelidvar+=1
-            query5="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name3,passno3,gender3,age3+' months',travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class)
+            query5="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name3,passno3,gender3,age3+' months',travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Infant')
             cursor.execute(query5)
             mycon.commit()
             list3=[name3,passno3,gender3,age3,travelid3,meal3]
@@ -180,13 +182,16 @@ def cost():
             cost=int(traverse7)
     onewaycost=(_NoAdults*cost)+(_NoChildren*(cost/2))            
     roundtripcost=onewaycost*2   
+    global costvar
     if oneround==1:
         print()        
-        print("Total cost = ",round(onewaycost))
+        costvar="Total cost: "+str(round(onewaycost))
+        print(costvar)      
         print()
     elif oneround==2:
         print()
-        print("Total cost = ",round(roundtripcost))
+        costvar="Total cost: "+str(round(roundtripcost))
+        print(costvar)
         print()
 
 def bookingID():
@@ -207,7 +212,7 @@ def bookingID():
 def cardDetails():
     _cardno=input("Enter Card Number(XXXX-XXXX-XXXX-XXXX): ")
     _expdate=input("Enter expiry date(mm/yy): ")
-    _name=input("Enter Name on Card: ")
+    _name=input("Enter Full Name on Card: ")
     _cvv=input("Enter CVV: ")
     return _name
 
@@ -225,17 +230,22 @@ def printticket():
     rowcnt = 0
     for row in _Fetch2:
         rowcnt = rowcnt + 1
-        d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),'Time of Departure':row[1],'Airline':row[3],'From':_From,'To':_To,'Duration of Flight':str(row[7]),'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8]}
-        stringtest1="BookingID,Date of Booking,From,To,PlaneID,Airline,Class,Date of Departure,Time of Departure,Duration of Flight,Time of arrival,Date of arrival,Name,Age,Gender,Passport Number,TravelID,Meal preference,email,mobile,Name"
+        length=len(_Fetch2)
+        d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),'Time of Departure':row[1],'Airline':row[3],'From':_From,'To':_To,'Duration of Flight':str(row[7]),'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8],'Adult':row[18]}
+        stringtest1="BookingID,Date of Booking,From,To,PlaneID,Airline,Class,Date of Departure,Time of Departure,Duration of Flight,Time of arrival,Date of arrival,Name,Age,Gender,Passport Number,TravelID,Meal preference,email,mobile,Name,Cost"
         
         if (rowcnt == 1):
-            _fh.write("BookingID: " + str(d['BookingID'])+ "\t\t"+"Date of Booking: " + str(d['DateofBooking'])+"\n\n")
+            _fh.write("BookingID: " + str(d['BookingID'])+ "\t\t"+"Date of Booking: " + str(d['DateofBooking'])+ "\t\t"+"Booked by: "+str(d['Bookedby'])+"\n\n")
             _fh.write("Date of Departure: " + str(d['Date of Departure'])+"\t\t"+"From: " + str(d['From'])+"\t\t"+"To: " + str(d['To'])+"\t\t"+ "Duration of Flight: " + str(d['Duration of Flight'])+"\n\n")   
             
             _fh.write("PlaneID: " + str(d['PlaneID'])+"\t\t"+"Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
-            _fh.write("Passenger(s)"+"\n\n")
+            _fh.write("Passenger(s)"+"Travel ID"+"Age"+"Gender"+"Passport Number"+"Meal Preference"+"\n\n")
 
-        _fh.write(row[10]+"\n") 
+        _fh.write(row[10]+"("+str(d['Adult'])+")"+row[14]+' '+row[13]+' '+row[12]+' '+str(row[11])+' '+row[15]+"\n") 
+        
+        if rowcnt==length:
+            _fh.write("\n"+costvar+"\n\n")
+            _fh.write("Email Address: "+email_ID+"\n\n"+"Mobile Number: "+str(mobile)+"\n")
     # Add other common text 
         
     _fh.close()

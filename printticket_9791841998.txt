@@ -1,0 +1,16 @@
+BookingID: 9791841998		Date of Booking: 2021-01-22		Booked by: Abhinav
+
+Date of Departure: 2021-01-28		From: Mumbai		To: Chennai		Duration of Flight: 4:00:00
+
+PlaneID: AX2032		Time of Departure: 19:30:00		Class: Economy		Time of Arrival: 23:30:00
+
+Passenger(s)Travel IDAgeGenderPassport NumberMeal Preference
+
+Abhinav Mahesh(Adult)A0073 17 M 123456789012 Veg
+Akshaya Mahesh(Adult)A0074 22 F 567890122345 Veg
+
+Total cost: 11600
+
+Email Address: abhi@gmail.com
+
+Mobile Number: 9003190031
