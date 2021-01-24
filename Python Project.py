@@ -217,6 +217,7 @@ def cardDetails():
     return _name
 
 def printticket():
+    print("Booking Id:", BookingID)
     outfile = r'C:\workspace\abhi_class_project\printticket_' + BookingID + '.txt'
     _fh=open(outfile,'w')
     cursor=mycon.cursor()
@@ -239,9 +240,20 @@ def printticket():
             _fh.write("Date of Departure: " + str(d['Date of Departure'])+"\t\t"+"From: " + str(d['From'])+"\t\t"+"To: " + str(d['To'])+"\t\t"+ "Duration of Flight: " + str(d['Duration of Flight'])+"\n\n")   
             
             _fh.write("PlaneID: " + str(d['PlaneID'])+"\t\t"+"Time of Departure: " + str(d['Time of Departure'])+"\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
-            _fh.write("Passenger(s)"+"Travel ID"+"Age"+"Gender"+"Passport Number"+"Meal Preference"+"\n\n")
+            passenger_h = "Passenger(s)"
+            travelid_h = "Travel ID"
+            age_h = "Age"
+            gender_h = "Gender"
+            passport_h = "Passport Number"
+            meal_pref_h = "Meal Preference"
+            sep = "|"
+            _fh.write(passenger_h.ljust(30)+sep+travelid_h.ljust(20)+sep+age_h.ljust(5)+sep+gender_h.ljust(8)+sep+str(passport_h).ljust(15)+sep+meal_pref_h.ljust(20)+sep+"\n\n")
 
-        _fh.write(row[10]+"("+str(d['Adult'])+")"+row[14]+' '+row[13]+' '+row[12]+' '+str(row[11])+' '+row[15]+"\n") 
+            #_fh.write("Passenger(s)"+"Travel ID"+"Age"+"Gender"+"Passport Number"+"Meal Preference"+"\n\n")
+
+        _adult = row[10]+"("+str(d['Adult'])+")"
+        _fh.write(_adult.ljust(30)+sep+row[14].ljust(20)+sep+row[13].ljust(5)+sep+row[12].ljust(8)+sep+str(row[11]).ljust(15)+sep+row[15].ljust(20)+sep+"\n")
+        #_fh.write(row[10]+"("+str(d['Adult'])+")"+row[14]+' '+row[13]+' '+row[12]+' '+str(row[11])+' '+row[15]+"\n") 
         
         if rowcnt==length:
             _fh.write("\n"+costvar+"\n\n")
