@@ -71,8 +71,8 @@ Exporting data from mysql
 You have to disable secure-file-prev in my.ini
 Location of my.ini: C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
 Comment out original line and make it a space like this:
-# secure-file-priv="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads"
-secure-file-priv=""
+Comment this out: secure-file-priv="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads"
+Include this: secure-file-priv=""
 You have to restart mysql after doing this change.
 
 Then open database:
