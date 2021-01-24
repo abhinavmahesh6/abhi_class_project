@@ -90,6 +90,7 @@ CREATE TABLE `booking` (
 
 LOCK TABLES `booking` WRITE;
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
+INSERT INTO `booking` VALUES ('Mahesh',4299659200,'2021-01-24');
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,6 +113,7 @@ CREATE TABLE `cust_info` (
   `Time_of_Dep` time DEFAULT NULL,
   `BookingID` bigint DEFAULT NULL,
   `Class` varchar(15) DEFAULT NULL,
+  `Adult` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`Travel_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -122,6 +124,7 @@ CREATE TABLE `cust_info` (
 
 LOCK TABLES `cust_info` WRITE;
 /*!40000 ALTER TABLE `cust_info` DISABLE KEYS */;
+INSERT INTO `cust_info` VALUES ('Mahesh',123456789012,'M','17','A0075','Veg','AI6564','2021-01-28','06:00:00',4299659200,'Premium Economy','Adult');
 /*!40000 ALTER TABLE `cust_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -134,4 +137,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-17 17:48:57
+-- Dump completed on 2021-01-24 14:50:06
