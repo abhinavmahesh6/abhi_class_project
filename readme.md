@@ -1,3 +1,23 @@
+Logging into github
+-------------------
+Go to www.github.com
+If you do not have a github id, create one
+Then you can either download the code or clone the project. 
+For cloning the project, you need to install git client on your laptop.
+
+Setting up project
+--------------------
+You can setup all the source code as follows:
+1. Create workspace directory under C:\
+cd\
+mkdir workspace
+
+2. Extract the abhi_class_project.zip file into abhi_class_project folder under c:\workspace
+
+3. If you have git client, you can do
+cd\workspace
+git clone https://github.com/abhinavmahesh6/abhi_class_project.git
+
 mysql Setting
 ---------------------
 Add this to your environment variable PATH:
@@ -60,14 +80,14 @@ use project
 
 Now run this command:
 SELECT * FROM aeroplane 
-INTO OUTFILE 'c:\workspace\abhi_class_project\data\aeroplane.csv' 
+INTO OUTFILE 'c:\\workspace\\abhi_class_project\\data\\aeroplane.csv' 
 FIELDS ENCLOSED BY '"' 
 TERMINATED BY ';' 
 ESCAPED BY '"' 
 LINES TERMINATED BY '\r\n';
 
 SELECT * FROM aeroplane_cost
-INTO OUTFILE 'c:\workspace\abhi_class_project\data\aeroplane_cost.csv' 
+INTO OUTFILE 'c:\\workspace\\abhi_class_project\\data\\aeroplane_cost.csv' 
 FIELDS ENCLOSED BY '"' 
 TERMINATED BY ';' 
 ESCAPED BY '"' 
@@ -78,7 +98,3 @@ mysqldump -d -u root -p<pwd> -h localhost project > c:\temp\table_structure.txt
 
 How to export table structure and data from mysql (remove the -d option)
 mysqldump -u root -p<pwd> -h localhost project > c:\workspace\abhi_class_project\data\setup_tables_and_data.sql
-
-Data only
-mysqldump -u root -p<pwd> -h localhost --no-create-info --skip-triggers project aeroplane > c:\workspace\abhi_class_project\data\aeroplane.txt
-
