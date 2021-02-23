@@ -211,8 +211,13 @@ def deleteBooking(_bookingId):
     if _count == 0:
         print(_bookingId, " is not found")
     else:
-        print(_bookingId, " is found")        
-
+        print(_bookingId, " is found")   
+        query_d="delete from booking where bookingid = " + _bookingId
+        cursor.execute(query_d)
+        query_c="delete from cust_info where bookingid = " + _bookingId
+        cursor.execute(query_c)
+        mycon.commit()
+        print(_bookingId, " has been deleted")   
 
 def cardDetails():
     _cardno=input("Enter Card Number(XXXX-XXXX-XXXX-XXXX): ")
