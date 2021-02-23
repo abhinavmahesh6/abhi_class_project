@@ -39,6 +39,7 @@ def getChoices():
         _bookingId = input("Enter booking id (10 digits) : ")   
         # Write logic to fetch booking
         # Ask for update - only class change allowed. Cost will change if class changes
+        updateBooking(_bookingId)
     elif _choice == 3:
         _bookingId = input("Enter booking id (10 digits) : ")   
         # Delete all rows with this booking id
@@ -218,6 +219,35 @@ def deleteBooking(_bookingId):
         cursor.execute(query_c)
         mycon.commit()
         print(_bookingId, " has been deleted")   
+
+def updateBooking(_bookingId):
+    query1="select count(*) from booking where bookingid = " + _bookingId
+    cursor=mycon.cursor()
+    cursor.execute(query1)
+    _Fetch1=cursor.fetchall()
+    _count = 0
+    for row in _Fetch1:
+        _count = row[0]
+    if _count == 0:
+        print(_bookingId, " is not found")
+    else:
+        print(_bookingId, " is found")   
+        _class = input("Please enter new class (Economy, Premium Economy, Business): ")
+        if _class == "Economy":
+            query_u="update cust_info set Class = '%s' where bookingid = '%s'"%(_class,_bookingId)
+            cursor.execute(query_u)
+            print("Class updated to '%s' for Booking Id '%s'"%(_class, _bookingId))
+        elif _class == "Premium Economy":    
+            query_u="update cust_info set Class = '%s' where bookingid = '%s'"%(_class,_bookingId)
+            cursor.execute(query_u)
+            print("Class updated to '%s' for Booking Id '%s'"%(_class, _bookingId))
+        elif _class == "Business":    
+            query_u="update cust_info set Class = '%s' where bookingid = '%s'"%(_class,_bookingId)
+            cursor.execute(query_u)
+            print("Class updated to '%s' for Booking Id '%s'"%(_class, _bookingId))
+        else:
+            print("You have entered an incorrect class. Please choose from (Economy, Premium Economy, Business)")    
+        mycon.commit()
 
 def cardDetails():
     _cardno=input("Enter Card Number(XXXX-XXXX-XXXX-XXXX): ")
