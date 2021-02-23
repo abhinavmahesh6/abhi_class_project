@@ -5,14 +5,14 @@ import time
 from datetime import date
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 global mycon
-mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project",auth_plugin="mysql_native_password")
 global listbookid
 listbookid=[]
 
 def main():
     TravelID()
     bookingID()
-    Getinputs()
+    getChoices()
     printticket()
     mycon.close()
 
@@ -30,7 +30,23 @@ def TravelID():
                             s=str(chr(i))+str(j)+str(k)+str(l)+str(m)
                             TravelList.append(s)
 
-def Getinputs():             
+def getChoices():
+    _choice = int(input("Enter 1 to book ticket, 2 to update reservation, 3 to cancel reservation, 0 to exit : "))
+    print("Choice entered", _choice)
+    if _choice == 1:
+        getInputs()
+    elif _choice == 2:
+        _bookingId = input("Enter booking id (10 digits) : ")   
+        # Write logic to fetch booking
+        # Ask for update - only class change allowed. Cost will change if class changes
+    elif _choice == 3:
+        _bookingId = input("Enter booking id (10 digits) : ")   
+        # Delete all rows with this booking id
+        deleteBooking(_bookingId)
+    elif _choice == 0:
+        return          
+
+def getInputs():             
     tempvar=1
     global _Class
     global _NoAdults
@@ -183,6 +199,20 @@ def bookingID():
         BookingID = _idvar
         break
     return _idvar
+
+def deleteBooking(_bookingId):
+    query1="select count(*) from booking where bookingid = " + _bookingId
+    cursor=mycon.cursor()
+    cursor.execute(query1)
+    _Fetch1=cursor.fetchall()
+    _count = 0
+    for row in _Fetch1:
+        _count = row[0]
+    if _count == 0:
+        print(_bookingId, " is not found")
+    else:
+        print(_bookingId, " is found")        
+
 
 def cardDetails():
     _cardno=input("Enter Card Number(XXXX-XXXX-XXXX-XXXX): ")
