@@ -1,0 +1,16 @@
+BookingID: 5548612414		Date of Booking: 2021-02-24		Booked by: Cheteswar Pujara
+
+Date of Departure: 2024-03-31		From: Chennai		To: Dubai		Duration of Flight: 4:00:00
+
+PlaneID: ER3404		Time of Departure: 19:30:00		Class: Economy		Time of Arrival: 23:30:00
+
+Passenger(s)                  |Travel ID           |Age  |Gender  |Passport Number|Meal Preference     |
+
+Kohli(Child)                  |A0110               |30   |M       |123456789      |Veg                 |
+Rohit(Infant)                 |A0111               |2 months|F       |987654321      |None                |
+
+Total cost: 8350
+
+Email Address: akycookie@gmail.com
+
+Mobile Number: 999888777

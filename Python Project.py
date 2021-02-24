@@ -5,15 +5,12 @@ import time
 from datetime import date
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 global mycon
-mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
+mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project",auth_plugin="mysql_native_password")
 global listbookid
 listbookid=[]
 
 def main():
-    TravelID()
-    bookingID()
     getChoices()
-    printticket()
     mycon.close()
 
 def TravelID():
@@ -31,19 +28,27 @@ def TravelID():
                             TravelList.append(s)
 
 def getChoices():
-    _choice = int(input("Enter 1 to book ticket, 2 to update reservation, 3 to cancel reservation, 0 to exit : "))
+    _choice = int(input("Enter 1 to book ticket, 2 to update reservation, 3 to cancel reservation, 4 to print ticket, 0 to exit : "))
     print("Choice entered", _choice)
     if _choice == 1:
+        TravelID()
+        _bookingId = bookingID()
         getInputs()
+        printticket(_bookingId)
     elif _choice == 2:
         _bookingId = input("Enter Booking id (10 digits) : ")   
         # Write logic to fetch booking
         # Ask for update - only class change allowed. Cost will change if class changes
         updateBooking(_bookingId)
+        printticket(_bookingId)
     elif _choice == 3:
         _bookingId = input("Enter booking id (10 digits) : ")   
         # Delete all rows with this booking id
         deleteBooking(_bookingId)
+    elif _choice == 4:
+        _bookingId = input("Enter booking id (10 digits) : ")   
+        # Delete all rows with this booking id
+        printBooking(_bookingId)
     elif _choice == 0:
         return          
 
@@ -183,6 +188,7 @@ def cost():
     global costvar
     print()        
     costvar="Total cost: "+str(round(onewaycost))
+    return costvar
     print(costvar)      
     print()
 
@@ -219,6 +225,24 @@ def deleteBooking(_bookingId):
         cursor.execute(query_c)
         mycon.commit()
         print(_bookingId, " has been deleted")   
+
+def printBooking(_bookingId):
+    query1="select count(*) from booking where bookingid = " + _bookingId
+    cursor=mycon.cursor()
+    cursor.execute(query1)
+    _Fetch1=cursor.fetchall()
+    _count = 0
+    for row in _Fetch1:
+        _count = row[0]
+    if _count == 0:
+        print(_bookingId, " is not found")
+    else:
+        print(_bookingId, " is found")   
+        # Write the code for printing the ticket
+        printticket(_bookingId)
+        mycon.commit()
+        print(_bookingId, " has been printed")   
+
 
 def updateBooking(_bookingId):
     query1="select count(*) from booking where bookingid = " + _bookingId
@@ -315,11 +339,13 @@ def cardDetails():
     _cvv=input("Enter CVV: ")
     return _name
 
-def printticket():
-    outfile = r'C:\workspace\abhi_class_project\printticket_' + BookingID + '.txt'
+def printticket(_bookingId):
+    outfile = r'C:\workspace\abhi_class_project\tickets\printticket_' + _bookingId + '.txt'
     _fh=open(outfile,'w')
     cursor=mycon.cursor()
-    query7="select * from aeroplane natural join booking natural join cust_info where booking.bookingid = " + BookingID + " group by Travel_ID"
+    query7='''select Plane_ID,Time_of_Dep,BookingID,Company,Type,Place_of_Departure,Destination,Duration,
+        Bookedby,Date_of_Booking,Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Date_of_Dep,Class,Adult 
+        from aeroplane natural join booking natural join cust_info where booking.bookingid = ''' + _bookingId + " group by Travel_ID"
     
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
@@ -329,7 +355,7 @@ def printticket():
     for row in _Fetch2:
         rowcnt = rowcnt + 1
         length=len(_Fetch2)
-        d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),'Time of Departure':row[1],'Airline':row[3],'From':_From,'To':_To,'Duration of Flight':str(row[7]),'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8],'Adult':row[18]}
+        d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),'Time of Departure':row[1],'Airline':row[3],'From':row[5],'To':row[6],'Duration of Flight':str(row[7]),'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8],'Adult':row[18]}
         stringtest1="BookingID,Date of Booking,From,To,PlaneID,Airline,Class,Date of Departure,Time of Departure,Duration of Flight,Time of arrival,Date of arrival,Name,Age,Gender,Passport Number,TravelID,Meal preference,email,mobile,Name,Cost"
         
         if (rowcnt == 1):
@@ -352,6 +378,10 @@ def printticket():
          
         
         if rowcnt==length:
+            # This needs to be fixed
+            costvar="10000"
+            email_ID="noi"
+            mobile="8056142175"
             _fh.write("\n"+costvar+"\n\n")
             _fh.write("Email Address: "+email_ID+"\n\n"+"Mobile Number: "+str(mobile)+"\n")
         
