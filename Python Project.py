@@ -5,7 +5,7 @@ import time
 from datetime import date
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 global mycon
-mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project",auth_plugin="mysql_native_password")
+mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
 global listbookid
 listbookid=[]
 
@@ -234,15 +234,16 @@ def updateBooking(_bookingId):
         print(_bookingId, " is found")  
         # Display the travel Ids
         sep='|'
-        print("Name".ljust(30)+sep+"PassportNo".ljust(20)+sep+"Gender".ljust(1)+sep+"Age".ljust(10)+sep+"Travel_ID".ljust(10)+sep+"Meal Pref".ljust(10)+sep+"PlaneId".ljust(6)+sep+"Date of Dep".ljust(15)+sep+"Time of Dep".ljust(15)+sep+"BookingId".ljust(10)+sep+"Class".ljust(15)+sep+"Adult".ljust(10)+"\n\n")
+        print("Name".ljust(20)+sep+"PassportNo".ljust(20)+sep+"Gender".ljust(1)+sep+"Age".ljust(10)+sep+"Travel_ID".ljust(10)+sep+"Meal Pref".ljust(10)+sep+"PlaneId".ljust(6)+sep+"Date of Dep".ljust(15)+sep+"Time of Dep".ljust(15)+sep+"BookingId".ljust(10)+sep+"Class".ljust(15)+sep+"Adult".ljust(10)+"\n")
 
         query2="select * from cust_info where bookingid = " + _bookingId
         cursor.execute(query2)
         _Fetch2=cursor.fetchall()
         for row in _Fetch2:
-            print(row)
+            print(row[0].ljust(20)+sep+str(row[1]).ljust(20)+sep+row[2].ljust(6)+sep+row[3].ljust(10)+sep+row[4].ljust(10)+sep+row[5].ljust(10)+sep+row[6].ljust(7)+sep+str(row[7]).ljust(15)+sep+str(row[8]).ljust(15)+sep+str(row[9]).ljust(10)+sep+row[10].ljust(15)+sep+row[11].ljust(10))
 
         # You can update name, passport_no, gender, age, meal_pref, class
+        print()
         _travelId = input("Enter Travel Id :")
         query3="select count(*) from cust_info where Travel_Id = '%s'"%(_travelId)
         cursor=mycon.cursor()
@@ -268,10 +269,13 @@ def updateBooking(_bookingId):
             cursor.execute(query_u)
             print("Passport No updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_passportNo, _bookingId,_travelId))
         elif _choice == 3:
-            _gender = input("Enter Gender : ")
-            query_u="update cust_info set Gender = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_gender,_bookingId,_travelId)
-            cursor.execute(query_u)
-            print("Gender updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_gender, _bookingId,_travelId))
+            _gender = input("Enter Gender(M/F/O) : ")
+            if _gender in 'MFO':
+                query_u="update cust_info set Gender = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_gender,_bookingId,_travelId)
+                cursor.execute(query_u)
+                print("Gender updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_gender, _bookingId,_travelId))
+            else:
+                print("Invalid gender")
         elif _choice == 4:
             _age = input("Enter Age : ")
             query_u="update cust_info set Age = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_age,_bookingId,_travelId)
@@ -284,20 +288,24 @@ def updateBooking(_bookingId):
             print("Meal Pref updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_mealpref, _bookingId,_travelId))
         elif _choice == 6:
             _class = input("Please enter new class (Economy, Premium Economy, Business): ")
-            if _class == "Economy":
-                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_class,_bookingId,_travelId)
+            if _class.lower() == "economy":
+                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Economy",_bookingId,_travelId)
                 cursor.execute(query_u)
-                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%(_class, _bookingId,_travelId))
-            elif _class == "Premium Economy":    
-                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_class,_bookingId,_travelId)
+                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Economy", _bookingId,_travelId))
+            elif _class.lower() == "premium economy":    
+                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Premium Economy",_bookingId,_travelId)
                 cursor.execute(query_u)
-                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%(_class, _bookingId,_travelId))
-            elif _class == "Business":    
-                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_class,_bookingId,_travelId)
+                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Premium Economy", _bookingId,_travelId))
+            elif _class.lower() == "business":    
+                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Business",_bookingId,_travelId)
                 cursor.execute(query_u)
-                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%(_class, _bookingId,_travelId))
+                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Business", _bookingId,_travelId))
             else:
                 print("You have entered an incorrect class. Please choose from (Economy, Premium Economy, Business)")    
+              
+        else:
+
+            print("Incorrect choice")
         mycon.commit()
 
 def cardDetails():
