@@ -164,8 +164,8 @@ def getInputs():
         mobile=int(input("Enter Mobile Number: "))
         email_ID=input("Enter Email_ID: ")
         print()
-        cost()
-        query6="insert into Booking values('%s','%s','%s')"%(cardDetails(),BookingID,date.today())
+        overallcost = cost()
+        query6="insert into Booking(BookedBy, BookingID, Date_of_Booking, Cost, email_ID, mobile) values('%s','%s','%s','%s','%s','%s')"%(cardDetails(),BookingID,date.today(),overallcost, email_ID, mobile)
         cursor.execute(query6)
         mycon.commit()
         
@@ -188,7 +188,7 @@ def cost():
     global costvar
     print()        
     costvar="Total cost: "+str(round(onewaycost))
-    return costvar
+    return onewaycost
     print(costvar)      
     print()
 
@@ -340,12 +340,13 @@ def cardDetails():
     return _name
 
 def printticket(_bookingId):
+    print("Booking Id:", _bookingId)
     outfile = r'C:\workspace\abhi_class_project\tickets\printticket_' + _bookingId + '.txt'
     _fh=open(outfile,'w')
     cursor=mycon.cursor()
     query7='''select Plane_ID,Time_of_Dep,BookingID,Company,Type,Place_of_Departure,Destination,Duration,
-        Bookedby,Date_of_Booking,Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Date_of_Dep,Class,Adult 
-        from aeroplane natural join booking natural join cust_info where booking.bookingid = ''' + _bookingId + " group by Travel_ID"
+        Bookedby,Date_of_Booking,Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Date_of_Dep,Class,Adult,cost,email_ID,mobile  
+        from aeroplane natural join booking natural join cust_info where booking.bookingid = ''' + _bookingId 
     
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
@@ -355,7 +356,11 @@ def printticket(_bookingId):
     for row in _Fetch2:
         rowcnt = rowcnt + 1
         length=len(_Fetch2)
-        d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),'Time of Departure':row[1],'Airline':row[3],'From':row[5],'To':row[6],'Duration of Flight':str(row[7]),'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8],'Adult':row[18]}
+        d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],
+            'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),
+            'Time of Departure':row[1],'Airline':row[3],'From':row[5],'To':row[6],'Duration of Flight':str(row[7]),
+            'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8],'Adult':row[18],
+            'cost':row[19],'Email_ID':row[20],'Mobile':row[21]}
         stringtest1="BookingID,Date of Booking,From,To,PlaneID,Airline,Class,Date of Departure,Time of Departure,Duration of Flight,Time of arrival,Date of arrival,Name,Age,Gender,Passport Number,TravelID,Meal preference,email,mobile,Name,Cost"
         
         if (rowcnt == 1):
@@ -379,9 +384,9 @@ def printticket(_bookingId):
         
         if rowcnt==length:
             # This needs to be fixed
-            costvar="10000"
-            email_ID="noi"
-            mobile="8056142175"
+            costvar=str(d['cost'])
+            email_ID=d['Email_ID']
+            mobile=d['Mobile']
             _fh.write("\n"+costvar+"\n\n")
             _fh.write("Email Address: "+email_ID+"\n\n"+"Mobile Number: "+str(mobile)+"\n")
         

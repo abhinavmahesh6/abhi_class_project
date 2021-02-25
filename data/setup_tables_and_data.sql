@@ -138,3 +138,7 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2021-01-24 14:50:06
+alter table booking add column cost bigint(10);
+alter table booking add column email_ID varchar(30);
+alter table booking add column mobile varchar(20);
+
