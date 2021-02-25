@@ -150,20 +150,20 @@ def getInputs():
             mycon.commit()
         for inp3 in range(0,_NoInfants):
             name3=input("Enter Name: ")
-            age3=input("Enter Age(in months): ")
+            age3=input("Enter Age: ")
             gender3=input('Enter Gender(M/F/O): ')
             passno3=input('Enter Passport Number: ')
             meal3="None"
             travelid3=TravelList[travelidvar]
             travelidvar+=1
-            query5="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name3,passno3,gender3,age3+' months',travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Infant')
+            query5="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name3,passno3,gender3,age3,travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Infant')
             cursor.execute(query5)
             mycon.commit()
 
         mobile=int(input("Enter Mobile Number: "))
         email_ID=input("Enter Email_ID: ")
         print()
-        overallcost = cost()
+        overallcost = cost(BookingID, _Class, InpPlane_ID)
         query6="insert into Booking(BookedBy, BookingID, Date_of_Booking, Cost, email_ID, mobile) values('%s','%s','%s','%s','%s','%s')"%(cardDetails(),BookingID,date.today(),overallcost, email_ID, mobile)
         cursor.execute(query6)
         mycon.commit()
@@ -175,15 +175,32 @@ def getInputs():
         filewrite.close()
         break
 
-def cost():
-    query8="select Cost from aeroplane_cost where Class='%s' and Plane_ID='%s'"%(_Class,InpPlane_ID)
+def cost(var_booking_id, var_class, var_plane_id):
+    query8="select Cost from aeroplane_cost where Class='%s' and Plane_ID='%s'"%(var_class,var_plane_id)
     cursor=mycon.cursor()
     cursor.execute(query8)
     _Fetch3=cursor.fetchall()
     for traverse6 in _Fetch3:
         for traverse7 in traverse6:
             cost=int(traverse7)
-    onewaycost=(_NoAdults*cost)+(_NoChildren*(cost/2))               
+
+    adult_count = 0
+    child_count = 0
+    infant_count = 0
+    query_adult="select Adult, count(*) from cust_info where Bookingid='%s' group by Adult"%(var_booking_id)
+    cursor=mycon.cursor()
+    cursor.execute(query_adult)
+    _Fetch3=cursor.fetchall()
+    for row in _Fetch3:
+        if row[0] == "Adult":
+            adult_count = row[1]
+        elif row[0] == "Child":    
+            child_count = row[1]
+        elif row[0] == "Infant":    
+            infant_count = row[1]
+
+    print("Adult : '%s', Child : '%s', Infant: '%s'"%(adult_count, child_count, infant_count))
+    onewaycost=(adult_count*cost)+(child_count*(cost/2))               
     global costvar
     print()        
     costvar="Total cost: "+str(round(onewaycost))
@@ -280,6 +297,7 @@ def updateBooking(_bookingId):
         else:
             print(_travelId, " is found")  
 
+
         invalid = True    
         while invalid:
             _choice = int(input("Enter 1 to update name, 2 for passport no, 3 for gender, 4 for age, 5 for meal_pref, 6 for class : "))
@@ -305,10 +323,22 @@ def updateBooking(_bookingId):
                 else:
                     print("Invalid gender. Please enter M, F, O")
             elif _choice == 4:
-                _age = input("Enter Age : ")
+                _age = int(input("Enter Age : "))
                 query_u="update cust_info set Age = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_age,_bookingId,_travelId)
                 cursor.execute(query_u)
                 print("Age updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_age, _bookingId,_travelId))
+                if _age <= 12 and _age > 2:
+                    query_u="update cust_info set Adult = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Child",_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Adult column updated as Child")
+                elif _age <= 2:    
+                    query_u="update cust_info set Adult = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Infant",_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Adult column updated as Infant")
+                elif _age > 12:    
+                    query_u="update cust_info set Adult = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Adult",_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Adult column updated as Adult")
                 invalid=False
             elif _choice == 5:
                 _mealpref = input("Enter Meal Pref : ")
@@ -334,7 +364,21 @@ def updateBooking(_bookingId):
                     print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Business", _bookingId,_travelId))
                     invalid=False
                 else:
-                    print("You have entered an incorrect class. Please choose from (Economy, Premium Economy, Business)")    
+                    print("You have entered an incorrect class. Please choose from (Economy, Premium Economy, Business)") 
+                # Check if class update, and recalculate cost
+                #        
+                if invalid==False:
+                    query_planeid="select Plane_ID from cust_info where Travel_Id = '%s'"%(_travelId)
+                    cursor=mycon.cursor()
+                    cursor.execute(query_planeid)
+                    _Fetch3=cursor.fetchall()
+                    for row in _Fetch3:
+                        var_plane_id = row[0]
+                        calculated_cost = cost(_bookingId, _class, var_plane_id)
+                        query_updatecost = "update booking set cost = '%s' where bookingid = '%s'"%(calculated_cost, _bookingId)
+                        cursor=mycon.cursor()
+                        cursor.execute(query_updatecost)
+                        print("Cost updated as '%s' for booking id '%s'"%(calculated_cost, _bookingId))
             else:
                 print("Incorrect choice")
         
