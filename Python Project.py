@@ -47,7 +47,6 @@ def getChoices():
         deleteBooking(_bookingId)
     elif _choice == 4:
         _bookingId = input("Enter booking id (10 digits) : ")   
-        # Delete all rows with this booking id
         printBooking(_bookingId)
     elif _choice == 0:
         return          
@@ -281,55 +280,64 @@ def updateBooking(_bookingId):
         else:
             print(_travelId, " is found")  
 
-        _choice = int(input("Enter 1 to update name, 2 for passport no, 3 for gender, 4 for age, 5 for meal_pref, 6 for class : "))
-        if _choice == 1:
-            _name = input("Enter New Name : ")
-            query_u="update cust_info set Name = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_name,_bookingId,_travelId)
-            cursor.execute(query_u)
-            print("Name updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_name, _bookingId,_travelId))
-        elif _choice == 2:
-            _passportNo = input("Enter New Passport No (10 digits numeric): ")
-            query_u="update cust_info set Passport_No = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_passportNo,_bookingId,_travelId)
-            cursor.execute(query_u)
-            print("Passport No updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_passportNo, _bookingId,_travelId))
-        elif _choice == 3:
-            _gender = input("Enter Gender(M/F/O) : ")
-            if _gender in 'MFO':
-                query_u="update cust_info set Gender = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_gender,_bookingId,_travelId)
+        invalid = True    
+        while invalid:
+            _choice = int(input("Enter 1 to update name, 2 for passport no, 3 for gender, 4 for age, 5 for meal_pref, 6 for class : "))
+            if _choice == 1:
+                _name = input("Enter New Name : ")
+                query_u="update cust_info set Name = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_name,_bookingId,_travelId)
                 cursor.execute(query_u)
-                print("Gender updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_gender, _bookingId,_travelId))
+                print("Name updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_name, _bookingId,_travelId))
+                invalid=False
+            elif _choice == 2:
+                _passportNo = input("Enter New Passport No (10 digits numeric): ")
+                query_u="update cust_info set Passport_No = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_passportNo,_bookingId,_travelId)
+                cursor.execute(query_u)
+                print("Passport No updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_passportNo, _bookingId,_travelId))
+                invalid=False
+            elif _choice == 3:
+                _gender = input("Enter Gender(M/F/O) : ")
+                if _gender in 'MFO':
+                    query_u="update cust_info set Gender = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_gender,_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Gender updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_gender, _bookingId,_travelId))
+                    invalid=False
+                else:
+                    print("Invalid gender. Please enter M, F, O")
+            elif _choice == 4:
+                _age = input("Enter Age : ")
+                query_u="update cust_info set Age = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_age,_bookingId,_travelId)
+                cursor.execute(query_u)
+                print("Age updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_age, _bookingId,_travelId))
+                invalid=False
+            elif _choice == 5:
+                _mealpref = input("Enter Meal Pref : ")
+                query_u="update cust_info set meal_pref = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_mealpref,_bookingId,_travelId)
+                cursor.execute(query_u)
+                print("Meal Pref updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_mealpref, _bookingId,_travelId))
+                invalid=False
+            elif _choice == 6:
+                _class = input("Please enter new class (Economy, Premium Economy, Business): ")
+                if _class.lower() == "economy":
+                    query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Economy",_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Economy", _bookingId,_travelId))
+                    invalid=False
+                elif _class.lower() == "premium economy":    
+                    query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Premium Economy",_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Premium Economy", _bookingId,_travelId))
+                    invalid=False
+                elif _class.lower() == "business":    
+                    query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Business",_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Business", _bookingId,_travelId))
+                    invalid=False
+                else:
+                    print("You have entered an incorrect class. Please choose from (Economy, Premium Economy, Business)")    
             else:
-                print("Invalid gender")
-        elif _choice == 4:
-            _age = input("Enter Age : ")
-            query_u="update cust_info set Age = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_age,_bookingId,_travelId)
-            cursor.execute(query_u)
-            print("Age updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_age, _bookingId,_travelId))
-        elif _choice == 5:
-            _mealpref = input("Enter Meal Pref : ")
-            query_u="update cust_info set meal_pref = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_mealpref,_bookingId,_travelId)
-            cursor.execute(query_u)
-            print("Meal Pref updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_mealpref, _bookingId,_travelId))
-        elif _choice == 6:
-            _class = input("Please enter new class (Economy, Premium Economy, Business): ")
-            if _class.lower() == "economy":
-                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Economy",_bookingId,_travelId)
-                cursor.execute(query_u)
-                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Economy", _bookingId,_travelId))
-            elif _class.lower() == "premium economy":    
-                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Premium Economy",_bookingId,_travelId)
-                cursor.execute(query_u)
-                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Premium Economy", _bookingId,_travelId))
-            elif _class.lower() == "business":    
-                query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Business",_bookingId,_travelId)
-                cursor.execute(query_u)
-                print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Business", _bookingId,_travelId))
-            else:
-                print("You have entered an incorrect class. Please choose from (Economy, Premium Economy, Business)")    
-              
-        else:
-
-            print("Incorrect choice")
+                print("Incorrect choice")
+        
         mycon.commit()
 
 def cardDetails():
