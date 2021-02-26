@@ -57,11 +57,11 @@ SET GLOBAL local_infile = true;
 
 Load data
 ----------
-load data local infile 'c:/workspace/abhi_class_project/data/aeroplane2.csv' into table aeroplane
+load data local infile 'c:/workspace/abhi_class_project/data/aeroplane.csv' into table aeroplane
 fields terminated by ',' enclosed by '"' lines terminated by '\r\n'
 (Plane_ID, Company, Type, Place_of_Departure, Destination, Time_of_Dep, Duration);
 
-load data local infile 'C:/workspace/abhi_class_project/mysql/aeroplane_cost.csv' into table aeroplane_cost
+load data local infile 'C:/workspace/abhi_class_project/data/aeroplane_cost.csv' into table aeroplane_cost
 fields terminated by ',' enclosed by '"'
 lines terminated by '\r\n'
 (Plane_ID, Class, Cost);
