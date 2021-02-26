@@ -98,3 +98,27 @@ mysqldump -d -u root -p<pwd> -h localhost project > c:\temp\table_structure.txt
 
 How to export table structure and data from mysql (remove the -d option)
 mysqldump -u root -p<pwd> -h localhost project > c:\workspace\abhi_class_project\data\setup_tables_and_data.sql
+
+
+GIT commands
+-----------------------------
+To pull code
+git pull 
+
+To add to staging
+git add .
+
+To commit locally
+git commit -m "My changes"
+
+To push to remote repository
+git push
+
+To erase all local changes
+git reset --hard HEAD
+
+-- To copy existing code to new local branch
+git checkout -b <new branch>
+
+--To switch back to master branch
+git checkout master	
