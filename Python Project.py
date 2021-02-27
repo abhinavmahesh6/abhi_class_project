@@ -6,8 +6,6 @@ from datetime import date
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 global mycon
 mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project",auth_plugin="mysql_native_password")
-global listbookid
-listbookid=[]
 
 def main():
     getChoices()
@@ -33,7 +31,7 @@ def getChoices():
     if _choice == 1:
         TravelID()
         _bookingId = bookingID()
-        getInputs()
+        getInputs(_bookingId)
         printticket(_bookingId)
     elif _choice == 2:
         _bookingId = input("Enter Booking id (10 digits) : ")   
@@ -51,16 +49,9 @@ def getChoices():
     elif _choice == 0:
         return          
 
-def getInputs():             
+def getInputs(var_bookingId):             
     tempvar=1
-    global _Class
-    global _NoAdults
-    global _NoChildren
-    global _NoInfants
-    global _From
-    global _To
-    global email_ID
-    global mobile
+    BookingID = var_bookingId
     while tempvar==1:
         _From=input('Travelling From: ')
         _To=input('Travelling To: ')
@@ -122,7 +113,6 @@ def getInputs():
             displayplanes()
                 
         
-        global InpPlane_ID
         InpPlane_ID=input("Select plane_ID from above: ")
         print()
         for traverse2 in _Fetch1:
@@ -224,7 +214,6 @@ def cost(var_booking_id, var_class, var_plane_id):
 
     print("Adult : '%s', Child : '%s', Infant: '%s'"%(adult_count, child_count, infant_count))
     onewaycost=(adult_count*cost)+(child_count*(cost/2))               
-    global costvar
     print()        
     costvar="Total cost: "+str(round(onewaycost))
     return onewaycost
@@ -237,12 +226,6 @@ def bookingID():
         for i in range(0,10):
             tempvar1=random.randint(0,9)
             _idvar+=str(tempvar1)        
-        if _idvar not in listbookid:
-            listbookid.append(_idvar)
-        else:
-            continue
-        global BookingID
-        BookingID = _idvar
         break
     return _idvar
 
@@ -433,7 +416,6 @@ def printticket(_bookingId):
     
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
-    global d
     d={}
     rowcnt = 0
     for row in _Fetch2:
@@ -444,7 +426,6 @@ def printticket(_bookingId):
             'Time of Departure':row[1],'Airline':row[3],'From':row[5],'To':row[6],'Duration of Flight':str(row[7]),
             'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8],'Adult':row[18],
             'cost':row[19],'Email_ID':row[20],'Mobile':row[21]}
-        #stringtest1="BookingID,Date of Booking,From,To,PlaneID,Airline,Class,Date of Departure,Time of Departure,Duration of Flight,Time of arrival,Date of arrival,Name,Age,Gender,Passport Number,TravelID,Meal preference,email,mobile,Name,Cost"
         
         if (rowcnt == 1):
             _fh.write("BookingID: " + str(d['BookingID'])+ "\t\t"+"Date of Booking: " + str(d['DateofBooking'])+ "\t\t"+
@@ -453,7 +434,7 @@ def printticket(_bookingId):
                 str(d['To'])+"\t\t"+ "Duration of Flight: " + str(d['Duration of Flight'])+"\n\n")   
             
             _fh.write("PlaneID: " + str(d['PlaneID'])+"\t\t"+"Time of Departure: " + str(d['Time of Departure'])+
-                "\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival()+"\n\n")
+                "\t\t"+"Class: "+str(d['Class'])+"\t\t"+"Time of Arrival: "+timeofarrival(d)+"\n\n")
             passenger_h = "Passenger(s)"
             travelid_h = "Travel ID"
             age_h = "Age"
@@ -480,7 +461,7 @@ def printticket(_bookingId):
     _fh.close()
     print("Booking ID",_bookingId,"has been printed") 
     
-def timeofarrival():    
+def timeofarrival(d):    
     ctr1=2
     ctr2=2
     split1=str(d['Duration of Flight']).split(':')
