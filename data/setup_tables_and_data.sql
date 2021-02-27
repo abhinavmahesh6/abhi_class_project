@@ -5,11 +5,11 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-SET NAMES utf8mb4;
-
-CREATE DATABASE `project` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `project`;
 
+SET NAMES utf8mb4;
+
+DROP TABLE IF EXISTS `aeroplane`;
 CREATE TABLE `aeroplane` (
   `Plane_ID` char(6) NOT NULL,
   `Company` varchar(30) DEFAULT NULL,
@@ -21,7 +21,6 @@ CREATE TABLE `aeroplane` (
   PRIMARY KEY (`Plane_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-TRUNCATE `aeroplane`;
 INSERT INTO `aeroplane` (`Plane_ID`, `Company`, `Type`, `Place_of_Departure`, `Destination`, `Time_of_Dep`, `Duration`) VALUES
 ('AA5545',  'American Airlines',  'Boeing', 'Chicago',  'Las Vegas',  '07:00:00', '06:00:00'),
 ('AA7182',  'American Airlines',  'Boeing', 'New York', 'Paris',  '07:00:00', '04:00:00'),
@@ -75,6 +74,7 @@ INSERT INTO `aeroplane` (`Plane_ID`, `Company`, `Type`, `Place_of_Departure`, `D
 ('WJ0012',  'WestJet',  'Airbus', 'Las Vegas',  'Vancouver',  '19:30:00', '04:00:00'),
 ('WJ9568',  'WestJet',  'Boeing', 'Los Angeles',  'Montreal', '19:30:00', '06:35:00');
 
+DROP TABLE IF EXISTS `aeroplane_cost`;
 CREATE TABLE `aeroplane_cost` (
   `Plane_ID` char(6) DEFAULT NULL,
   `Class` varchar(15) DEFAULT NULL,
@@ -83,7 +83,6 @@ CREATE TABLE `aeroplane_cost` (
   CONSTRAINT `aeroplane_cost_ibfk_1` FOREIGN KEY (`Plane_ID`) REFERENCES `aeroplane` (`Plane_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-TRUNCATE `aeroplane_cost`;
 INSERT INTO `aeroplane_cost` (`Plane_ID`, `Class`, `Cost`) VALUES
 ('AX2032',  'Business', 8700),
 ('AX2032',  'Premium Economy',  7000),
@@ -239,6 +238,7 @@ INSERT INTO `aeroplane_cost` (`Plane_ID`, `Class`, `Cost`) VALUES
 ('TA1097',  'Business', 40000),
 ('WJ9568',  'Business', 40000);
 
+DROP TABLE IF EXISTS `booking`;
 CREATE TABLE `booking` (
   `Bookedby` varchar(30) NOT NULL,
   `BookingID` bigint DEFAULT NULL,
@@ -248,10 +248,13 @@ CREATE TABLE `booking` (
   `mobile` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-TRUNCATE `booking`;
 INSERT INTO `booking` (`Bookedby`, `BookingID`, `Date_of_Booking`, `cost`, `email_ID`, `mobile`) VALUES
-('Mahesh',  2455696959, '2021-02-26', 10000,  'abhi@gmail.com', '9003190031');
+('Ram Kumar', 7608491851, '2021-02-27', 8400, 'RamShankar@gmail.com', '9087654654'),
+('Ram Kumar', 7849287410, '2021-02-27', 8400, 'RamShankar@gmail.com', '9087654654'),
+('Ram Kumar', 1451333120, '2021-02-27', 8400, 'RamShankar@gmail.com', '9087654654'),
+('Ram Kumar', 2024326798, '2021-02-27', 9750, 'RamShankar@gmail.com', '9087654654');
 
+DROP TABLE IF EXISTS `cust_info`;
 CREATE TABLE `cust_info` (
   `Name` varchar(30) DEFAULT NULL,
   `Passport_No` bigint DEFAULT NULL,
@@ -265,11 +268,23 @@ CREATE TABLE `cust_info` (
   `BookingID` bigint DEFAULT NULL,
   `Class` varchar(15) DEFAULT NULL,
   `Adult` varchar(10) DEFAULT NULL,
+  `place_of_dep` varchar(20) DEFAULT NULL,
+  `place_of_arr` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`Travel_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-TRUNCATE `cust_info`;
-INSERT INTO `cust_info` (`Name`, `Passport_No`, `Gender`, `Age`, `Travel_ID`, `meal_pref`, `Plane_ID`, `Date_of_Dep`, `Time_of_Dep`, `BookingID`, `Class`, `Adult`) VALUES
-('Mahesh',  123456789012, 'M',  '17', 'A0124',  'Veg',  'AI6564', '2021-01-28', '08:00:00', 2455696959, 'Premium Economy',  'Adult');
+INSERT INTO `cust_info` (`Name`, `Passport_No`, `Gender`, `Age`, `Travel_ID`, `meal_pref`, `Plane_ID`, `Date_of_Dep`, `Time_of_Dep`, `BookingID`, `Class`, `Adult`, `place_of_dep`, `place_of_arr`) VALUES
+('Ram ',  123423421345, 'M',  '30', 'A0118',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 7608491851, 'Premium Economy',  'Adult',  'Las Vegas',  'Chicago'),
+('Shankar', 98987657867,  'M',  '8',  'A0119',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 7608491851, 'Premium Economy',  'Child',  'Las Vegas',  'Chicago'),
+('Aravind', 768657786352, 'M',  '1',  'A0120',  'None', 'AA5545', '2021-03-16', '07:00:00', 7608491851, 'Premium Economy',  'Infant', 'Las Vegas',  'Chicago'),
+('Ram ',  123423421345, 'M',  '30', 'A0121',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 7849287410, 'Premium Economy',  'Adult',  'Las Vegas',  'Chicago'),
+('Shankar', 98987657867,  'M',  '8',  'A0122',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 7849287410, 'Premium Economy',  'Child',  'Las Vegas',  'Chicago'),
+('Aravind', 768657786352, 'M',  '1',  'A0123',  'None', 'AA5545', '2021-03-16', '07:00:00', 7849287410, 'Premium Economy',  'Infant', 'Las Vegas',  'Chicago'),
+('Ram ',  123423421345, 'M',  '30', 'A0124',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 1451333120, 'Premium Economy',  'Adult',  'Las Vegas',  'Chicago'),
+('Shankar', 98987657867,  'M',  '8',  'A0125',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 1451333120, 'Premium Economy',  'Child',  'Las Vegas',  'Chicago'),
+('Aravind', 768657786352, 'M',  '1',  'A0126',  'None', 'AA5545', '2021-03-16', '07:00:00', 1451333120, 'Premium Economy',  'Infant', 'Las Vegas',  'Chicago'),
+('Ram ',  123423421345, 'M',  '30', 'A0127',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 2024326798, 'Business', 'Adult',  'Las Vegas',  'Chicago'),
+('Shankar', 98987657867,  'M',  '8',  'A0128',  'Veg',  'AA5545', '2021-03-16', '07:00:00', 2024326798, 'Business', 'Child',  'Las Vegas',  'Chicago'),
+('Aravind', 768657786352, 'M',  '1',  'A0129',  'None', 'AA5545', '2021-03-16', '07:00:00', 2024326798, 'Business', 'Infant', 'Las Vegas',  'Chicago');
 
--- 2021-02-26 16:34:15
+-- 2021-02-27 12:09:45
