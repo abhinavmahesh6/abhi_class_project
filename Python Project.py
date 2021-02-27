@@ -302,6 +302,7 @@ def updateBooking(_bookingId):
 
         # You can update name, passport_no, gender, age, meal_pref, class
         print()
+
         _travelId = input("Enter Travel Id :")
         query3="select count(*) from cust_info where Travel_Id = '%s'"%(_travelId)
         cursor=mycon.cursor()
@@ -318,7 +319,7 @@ def updateBooking(_bookingId):
 
         invalid = True    
         while invalid:
-            _choice = int(input("Enter 1 to update name, 2 for passport no, 3 for gender, 4 for age, 5 for meal_pref, 6 for class : "))
+            _choice = int(input("Enter 1 to update name, 2 for passport no, 3 for gender, 4 for age, 5 for meal_pref, 6 for class: "))
             if _choice == 1:
                 _name = input("Enter New Name : ")
                 query_u="update cust_info set Name = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_name,_bookingId,_travelId)
@@ -369,22 +370,25 @@ def updateBooking(_bookingId):
                     print("Meal Pref updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_mealpref, _bookingId,_travelId))
                     invalid=False
             elif _choice == 6:
-                _class = input("Please enter new class (Economy, Premium Economy, Business): ")
+                print("Class will be updated for all travellers")
+                _class = input("Please enter new class (Economy, Premium Economy, Business, None): ")
                 if _class.lower() == "economy":
-                    query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Economy",_bookingId,_travelId)
+                    query_u="update cust_info set Class = '%s' where bookingid = '%s'"%("Economy",_bookingId)
                     cursor.execute(query_u)
-                    print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Economy", _bookingId,_travelId))
+                    print("Class updated to '%s' for Booking Id '%s'"%("Economy", _bookingId))
                     invalid=False
                 elif _class.lower() == "premium economy":    
-                    query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Premium Economy",_bookingId,_travelId)
+                    query_u="update cust_info set Class = '%s' where bookingid = '%s'"%("Premium Economy",_bookingId)
                     cursor.execute(query_u)
-                    print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Premium Economy", _bookingId,_travelId))
+                    print("Class updated to '%s' for Booking Id '%s'"%("Premium Economy", _bookingId))
                     invalid=False
                 elif _class.lower() == "business":    
-                    query_u="update cust_info set Class = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Business",_bookingId,_travelId)
+                    query_u="update cust_info set Class = '%s' where bookingid = '%s'"%("Business",_bookingId)
                     cursor.execute(query_u)
-                    print("Class updated to '%s' for Booking Id '%s' and Travel Id '%s'"%("Business", _bookingId,_travelId))
+                    print("Class updated to '%s' for Booking Id '%s'"%("Business", _bookingId))
                     invalid=False
+                elif _class.lower() == "none":
+                    invalid=False    
                 else:
                     print("You have entered an incorrect class. Please choose from (Economy, Premium Economy, Business)") 
                 # Check if class update, and recalculate cost
@@ -422,7 +426,6 @@ def printticket(_bookingId):
         Bookedby,Date_of_Booking,Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Date_of_Dep,Class,Adult,
         cost,email_ID,mobile,place_of_dep,place_of_arr 
         from aeroplane natural join booking natural join cust_info where booking.bookingid = ''' + _bookingId 
-    print(query7)
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
     d={}
