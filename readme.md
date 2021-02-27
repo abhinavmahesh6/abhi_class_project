@@ -122,3 +122,11 @@ git checkout -b <new branch>
 
 --To switch back to master branch
 git checkout master	
+
+--To compare remote changes with local 
+ git fetch
+ git diff --name-only master origin/master
+
+ -- To merge change from origin/master to master
+ git merge
+ 
