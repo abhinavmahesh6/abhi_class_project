@@ -12,7 +12,6 @@ def main():
     mycon.close()
 
 def TravelID():
-    global TravelList
     TravelList=[]
     for i in range(65,93):
         for j in range(0,10):
@@ -24,14 +23,15 @@ def TravelID():
                         else:
                             s=str(chr(i))+str(j)+str(k)+str(l)+str(m)
                             TravelList.append(s)
+    return TravelList                           
 
 def getChoices():
     _choice = int(input("Enter 1 to book ticket, 2 to update reservation, 3 to cancel reservation, 4 to print ticket, 0 to exit : "))
     print("Choice entered", _choice)
     if _choice == 1:
-        TravelID()
+        TravelList = TravelID()
         _bookingId = bookingID()
-        getInputs(_bookingId)
+        getInputs(_bookingId, TravelList)
         printticket(_bookingId)
     elif _choice == 2:
         _bookingId = input("Enter Booking id (10 digits) : ")   
@@ -49,7 +49,7 @@ def getChoices():
     elif _choice == 0:
         return          
 
-def getInputs(var_bookingId):             
+def getInputs(var_bookingId, TravelList):             
     tempvar=1
     BookingID = var_bookingId
     while tempvar==1:
@@ -133,9 +133,9 @@ def getInputs(var_bookingId):
             travelid1=TravelList[travelidvar]
             travelidvar+=1
             query3="""insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,
-                Time_of_Dep,BookingID,Class,Adult) 
-                values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name1,passno1,gender1,age1,
-                    travelid1,meal1,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Adult')
+                Time_of_Dep,BookingID,Class,Adult,place_of_dep,place_of_arr) 
+                values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name1,passno1,gender1,age1,
+                    travelid1,meal1,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Adult',_From,_To)
             cursor.execute(query3)
             mycon.commit()
             print()
@@ -149,9 +149,13 @@ def getInputs(var_bookingId):
             meal2=input("Enter on flight meal preferences:(Veg/Non-Veg): ")
             travelid2=TravelList[travelidvar]
             travelidvar+=1
-            query4="""insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) 
-            values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name2,passno2,gender2,age2,travelid2,
-                meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Child')
+            query4="""insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,
+                Time_of_Dep,BookingID,Class,Adult,place_of_dep,place_of_arr) 
+                values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name2,passno2,gender2,age2,
+                    travelid2,meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Child',_From,_To)
+            #query4="""insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) 
+            #values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name2,passno2,gender2,age2,travelid2,
+            #    meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Child')
             cursor.execute(query4)
             mycon.commit()
             print()
@@ -165,9 +169,13 @@ def getInputs(var_bookingId):
             meal3="None"
             travelid3=TravelList[travelidvar]
             travelidvar+=1
-            query5="""insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) 
-            values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name3,passno3,gender3,age3,travelid3,
-                meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Infant')
+            query5="""insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,
+                Time_of_Dep,BookingID,Class,Adult,place_of_dep,place_of_arr) 
+                values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name3,passno3,gender3,age3,
+                    travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Infant',_From,_To)
+            #query5="""insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) 
+            #values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""%(name3,passno3,gender3,age3,travelid3,
+            #    meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Infant')
             cursor.execute(query5)
             mycon.commit()
             print()
@@ -411,9 +419,10 @@ def printticket(_bookingId):
     _fh=open(outfile,'w')
     cursor=mycon.cursor()
     query7='''select Plane_ID,Time_of_Dep,BookingID,Company,Type,Place_of_Departure,Destination,Duration,
-        Bookedby,Date_of_Booking,Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Date_of_Dep,Class,Adult,cost,email_ID,mobile  
+        Bookedby,Date_of_Booking,Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Date_of_Dep,Class,Adult,
+        cost,email_ID,mobile,place_of_dep,place_of_arr 
         from aeroplane natural join booking natural join cust_info where booking.bookingid = ''' + _bookingId 
-    
+    print(query7)
     cursor.execute(query7)
     _Fetch2=cursor.fetchall()
     d={}
@@ -423,7 +432,7 @@ def printticket(_bookingId):
         length=len(_Fetch2)
         d={'Name':row[10],'Age':row[13],'Gender':row[12],'TravelID':row[14],'Mealpref':row[15],
             'Passport Number':row[11],'PlaneID':row[0],'Date of Departure':row[16].strftime("20%y-%m-%d"),
-            'Time of Departure':row[1],'Airline':row[3],'From':row[5],'To':row[6],'Duration of Flight':str(row[7]),
+            'Time of Departure':row[1],'Airline':row[3],'From':row[22],'To':row[23],'Duration of Flight':str(row[7]),
             'BookingID':row[2],'DateofBooking':row[9],'Class':row[17],'Bookedby':row[8],'Adult':row[18],
             'cost':row[19],'Email_ID':row[20],'Mobile':row[21]}
         
