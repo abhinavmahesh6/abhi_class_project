@@ -5,7 +5,7 @@ import time
 from datetime import date
 filename = "c:/workspace/abhi_class_project/Aeroplane_Ctr.txt"
 global mycon
-mycon=sqltor.connect(host="localhost",user="root",passwd="secret",database="Project",auth_plugin="mysql_native_password")
+mycon=sqltor.connect(host="localhost",user="root",passwd="mysql",database="Project",auth_plugin="mysql_native_password")
 global listbookid
 listbookid=[]
 
@@ -119,6 +119,7 @@ def getInputs():
         
         global InpPlane_ID
         InpPlane_ID=input("Select plane_ID from above: ")
+        print()
         for traverse2 in _Fetch1:
             if InpPlane_ID in traverse2:
                 time_of_dep = str(traverse2[-1]) 
@@ -127,8 +128,10 @@ def getInputs():
         travelidvar=int(travelidvar)
         
         for inp1 in range(0,_NoAdults):
+            print("Adult")
+            print()
             name1=input("Enter Name: ")
-            age1=input("Enter Age: ")
+            age1=input("Enter Age(12+): ")
             gender1=input('Enter Gender(M/F/O): ')
             passno1=input('Enter Passport Number(12 digits): ')
             meal1=input("Enter on flight meal preference:(Veg/Non-Veg): ")
@@ -137,9 +140,12 @@ def getInputs():
             query3="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name1,passno1,gender1,age1,travelid1,meal1,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Adult')
             cursor.execute(query3)
             mycon.commit()
+            print()
         for inp2 in range(0,_NoChildren):            
+            print("Child")
+            print()
             name2=input("Enter Name: ")
-            age2=input("Enter Age: ")
+            age2=input("Enter Age(2-12): ")
             gender2=input('Enter Gender(M/F/O): ')
             passno2=input('Enter Passport Number(12 digits): ')
             meal2=input("Enter on flight meal preferences:(Veg/Non-Veg): ")
@@ -148,17 +154,21 @@ def getInputs():
             query4="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name2,passno2,gender2,age2,travelid2,meal2,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Child')
             cursor.execute(query4)
             mycon.commit()
+            print()
         for inp3 in range(0,_NoInfants):
+            print("Infant")
+            print()
             name3=input("Enter Name: ")
-            age3=input("Enter Age: ")
+            age3=input("Enter Age(<2): ")
             gender3=input('Enter Gender(M/F/O): ')
-            passno3=input('Enter Passport Number: ')
+            passno3=input('Enter Passport Number(12 digits): ')
             meal3="None"
             travelid3=TravelList[travelidvar]
             travelidvar+=1
             query5="insert into Cust_info(Name,Passport_No,Gender,Age,Travel_ID,meal_pref,Plane_ID,Date_of_Dep,Time_of_Dep,BookingID,Class,Adult) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(name3,passno3,gender3,age3,travelid3,meal3,InpPlane_ID,_Departure+' 00:00:00',time_of_dep,BookingID,_Class,'Infant')
             cursor.execute(query5)
             mycon.commit()
+            print()
 
         mobile=int(input("Enter Mobile Number: "))
         email_ID=input("Enter Email_ID: ")
@@ -257,7 +267,7 @@ def printBooking(_bookingId):
         # Write the code for printing the ticket
         printticket(_bookingId)
         mycon.commit()
-        print(_bookingId, " has been printed")   
+           
 
 
 def updateBooking(_bookingId):
@@ -308,7 +318,7 @@ def updateBooking(_bookingId):
                 print("Name updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_name, _bookingId,_travelId))
                 invalid=False
             elif _choice == 2:
-                _passportNo = input("Enter New Passport No (10 digits numeric): ")
+                _passportNo = input("Enter New Passport No (12 digits numeric): ")
                 query_u="update cust_info set Passport_No = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_passportNo,_bookingId,_travelId)
                 cursor.execute(query_u)
                 print("Passport No updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_passportNo, _bookingId,_travelId))
@@ -332,20 +342,24 @@ def updateBooking(_bookingId):
                     cursor.execute(query_u)
                     print("Adult column updated as Child")
                 elif _age <= 2:    
-                    query_u="update cust_info set Adult = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Infant",_bookingId,_travelId)
+                    query_u="update cust_info set Adult = '%s',meal_pref = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Infant","None",_bookingId,_travelId)
                     cursor.execute(query_u)
-                    print("Adult column updated as Infant")
+                    print("Adult column updated as Infant and Meal Pref updated as None")
                 elif _age > 12:    
                     query_u="update cust_info set Adult = '%s' where bookingid = '%s' and Travel_ID = '%s'"%("Adult",_bookingId,_travelId)
                     cursor.execute(query_u)
                     print("Adult column updated as Adult")
                 invalid=False
             elif _choice == 5:
-                _mealpref = input("Enter Meal Pref : ")
-                query_u="update cust_info set meal_pref = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_mealpref,_bookingId,_travelId)
-                cursor.execute(query_u)
-                print("Meal Pref updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_mealpref, _bookingId,_travelId))
-                invalid=False
+                _mealpref = input("Enter Meal Pref(Veg/Non-Veg) : ")
+                if _mealpref.lower() not in 'vegnon-veg':
+                    print("Your meal pref is incorrect. Please choose from (Veg/Non-Veg)")
+                    
+                else:
+                    query_u="update cust_info set meal_pref = '%s' where bookingid = '%s' and Travel_ID = '%s'"%(_mealpref,_bookingId,_travelId)
+                    cursor.execute(query_u)
+                    print("Meal Pref updated to '%s' for Booking Id '%s' and Travel_ID '%s'"%(_mealpref, _bookingId,_travelId))
+                    invalid=False
             elif _choice == 6:
                 _class = input("Please enter new class (Economy, Premium Economy, Business): ")
                 if _class.lower() == "economy":
@@ -439,10 +453,10 @@ def printticket(_bookingId):
             costvar=str(d['cost'])
             email_ID=d['Email_ID']
             mobile=d['Mobile']
-            _fh.write("\n"+costvar+"\n\n")
-            _fh.write("Email Address: "+email_ID+"\n\n"+"Mobile Number: "+str(mobile)+"\n")
-        
+            _fh.write("\n"+"Total Cost: "+costvar+"\n\n")
+            _fh.write("Email Address: "+email_ID+"\n\n"+"Mobile Number: "+str(mobile)+"\n")       
     _fh.close()
+    print("Booking ID",_bookingId,"has been printed") 
     
 def timeofarrival():    
     ctr1=2

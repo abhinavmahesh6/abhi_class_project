@@ -1,0 +1,17 @@
+BookingID: 7106934488		Date of Booking: 2021-02-27		Booked by: Ram Kumar
+
+Date of Departure: 2021-03-16		From: Chicago		To: Las Vegas		Duration of Flight: 6:00:00
+
+PlaneID: AA5545		Time of Departure: 7:00:00		Class: Business		Time of Arrival: 13:00:00
+
+Passenger(s)                  |Travel ID           |Age  |Gender  |Passport Number|Meal Preference     |
+
+Ram (Adult)                   |A0004               |30   |M       |123423421345   |Non-veg             |
+Shankar(Infant)               |A0005               |1    |M       |98987657867    |None                |
+Aravind(Infant)               |A0006               |1    |M       |768657786352   |None                |
+
+Total Cost: 6500
+
+Email Address: RamShankar@gmail.com
+
+Mobile Number: 9087654654
